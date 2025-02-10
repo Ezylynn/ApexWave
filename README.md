@@ -1,8 +1,31 @@
-# React + Vite
+# 🌊 ApexWave
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A live chat application with user authentication, where you can add people and chat to them online!
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
+
+- ✅ Instant Messaging  
+- ✅ User Authentication (Support log-in method via Facebook & Google)
+- ✅ Private Chats  
+- ✅ Group Chats (coming soon)
+
+
+---
+
+## 🎥 Demo & Screenshots (Coming Soon)
+
+
+---
+
+## 🛠️ Tech Stack
+
+| **Frontend** | **Backend** | **Database** |  
+|-------------|------------|-------------|  
+| React JS & Tailwind CSS  | Firebase | Firestore |  
+
+
+---
+
+P.S This is my first time incorporating Tailwind CSS & React JS into my web applications, so this project is a great learning experience!
