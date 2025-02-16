@@ -1,6 +1,9 @@
 import React from 'react'
 // import Router from './routes/Router'
-import { BrowserRouter, Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+
+
 import Home from "./pages/Home"
 import Chat from './pages/Chat'
 import SignIn from './pages/SignIn'
