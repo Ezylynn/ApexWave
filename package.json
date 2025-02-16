@@ -10,8 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@firebase/auth": "^1.9.0",
+    "@firebase/firestore": "^4.7.8",
     "@tailwindcss/cli": "^4.0.4",
     "firebase": "^11.3.1",
+    "firestore": "^1.1.6",
+    "i": "^0.3.7",
+    "npm": "^11.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.5",

@@ -1,10 +1,36 @@
 import React from 'react'
 import Footer from '../layout/Footer'
-import { app } from '../firebase/config';
-
+import { app, auth, database } from '../firebase/config';
+import { FacebookAuthProvider, getAdditionalUserInfo, signInWithPopup } from "@firebase/auth"
+import { addDoc, collection } from '@firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 function SignIn() {
 
-  console.log(app);
+  // console.log(app);
+  // console.log(database);
+
+  //Khai bao phuong thuc dang nhap
+  const facebookProvider = new FacebookAuthProvider();
+
+  const navigate = useNavigate();
+  const loginFacebook = async () => {
+    const result = await signInWithPopup(auth, facebookProvider);
+    console.log("result", result.user)
+    const user = result.user;
+    const userInfor = getAdditionalUserInfo(result);
+    console.log("userInfor", userInfor);
+    if (userInfor?.isNewUser) {
+      console.log("new user");
+      addDoc(collection(database, "users"),
+        {
+          displayName: user.displayName || "",
+          email: user.email || "",
+          photoURL: user.photoURL,
+          providerId: userInfor.providerId,
+          uid: user.uid,
+        })
+    }
+  }
   return (
     <div>
       <main className="container h-screen mx-auto flex flex-col items-center justify-center gap-12">
@@ -36,6 +62,7 @@ function SignIn() {
               <img className="size-6 mr-8" src="../assets/GoogleLogo.jpg" alt="logo.png" />
             </div>
             <p className="w-full text-center text-sm font-semibold">Log in with Google</p>
+            <p className="w-full text-center text-sm font-semibold" style={{ margin: "10px", cursor: "pointer" }} onClick={loginFacebook}>Log in with Facebook</p>
           </div>
           <p>Don't have an account? <a className="text-blue-600" href="./sign-up.html">Sign Up</a></p>
         </section>
