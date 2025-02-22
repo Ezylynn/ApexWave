@@ -2,7 +2,7 @@ import React from 'react'
 
 function Footer() {
     return ( 
-<footer className="flex w-full flex-col items-center shadow-md">
+    <footer className="flex w-full flex-col items-center shadow-md">
   <div className="flex w-full flex-col items-center justify-between">
     <div className="flex w-full flex-col items-center justify-center bg-[#12141D]">
       <div className="flex w-full items-center justify-center gap-10 py-8">
@@ -26,7 +26,7 @@ function Footer() {
       </p>
     </div>
   </div>
-</footer>
+    </footer>
 
         
 

@@ -14,26 +14,29 @@ function Header() {
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" popovertarget="mypopover" id="mobile-menu" className="block size-10 pr-3  sm:size-12 md:hidden  ">
     <path fillRule="evenodd" d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" />
   </svg>
+  
   {/* Mobile Menu Options */}
   <div id="mobile-options" className="w-full h-auto bg-[#FB8E0B] md:hidden absolute top-full flex flex-col text-sm font-semibold">
 
-    {/* <Link className="w-full 	flex-grow  bg-[#FB8E0B] hover:bg-teal-500 text-center py-2" to="./">About</Link>
+    <Link className="w-full 	flex-grow  bg-[#FB8E0B] hover:bg-teal-500 text-center py-2" to="./">About</Link>
     <Link className="w-full 	flex-grow bg-[#FB8E0B] hover:bg-teal-500 text-center py-2" to="./chat">Demos</Link>
     <Link className="w-full 	flex-grow bg-[#FB8E0B] hover:bg-teal-500 text-center py-2" to="#">Contact</Link>
     <Link className="w-full  	flex-grow bg-[#FB8E0B] hover:bg-teal-500 text-center py-2" to="./signin">Login</Link>
-    <Link className="w-full  	flex-grow bg-[#FB8E0B] hover:bg-teal-500 text-center py-2" to="./chat">Get Started</Link> */}
+    <Link className="w-full  	flex-grow bg-[#FB8E0B] hover:bg-teal-500 text-center py-2" to="./signup">Get Started</Link>
   </div>
+
+
   <div className="w-5/6 hidden md:flex md:justify-around items-center">
     {/* Left Section */}
     <div className="w-2/3 flex items-center gap-6 justify-center">
-      {/* <Link to="./" className=" text-black hover:underline py-1 text-sm  xl:text-xl 2xl:text-2xl">About</Link>
+      <Link to="./" className=" text-black hover:underline py-1 text-sm  xl:text-xl 2xl:text-2xl">About</Link>
       <Link to="./chat" className=" text-black hover:underline py-1   text-sm  xl:text-xl 2xl:text-2xl">Demo</Link>
-      <Link to="#" className=" text-black hover:underline py-1   text-sm  xl:text-xl 2xl:text-2xl">Contact</Link> */}
+      <Link to="#" className=" text-black hover:underline py-1   text-sm  xl:text-xl 2xl:text-2xl">Contact</Link>
     </div>
     {/* Right Section */}
     <div className="w-1/3 flex items-center gap-8 justify-center ">
-      {/* <Link to="./signin" className="hover:underline py-1 text-sm  xl:text-xl 2xl:text-2xl">Login</Link>
-      <Link to="./chat" className=" bg-[#FB8E0B] hover:bg-[#df800b] text-white rounded-lg py-2 px-5 text-sm font-semibold xl:text-xl 2xl:text-2xl">Get Started</Link> */}
+      <Link to="./signin" className="hover:underline py-1 text-sm  xl:text-xl 2xl:text-2xl">Login</Link>
+      <Link to="./signup" className=" bg-[#FB8E0B] hover:bg-[#df800b] text-white rounded-lg py-2 px-5 text-sm font-semibold xl:text-xl 2xl:text-2xl">Get Started</Link>
     </div>
   </div>
 </nav>

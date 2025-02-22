@@ -1,6 +1,6 @@
 import React from 'react'
 // import Router from './routes/Router'
-import { BrowserRouter,  Router, Route } from "react-router-dom";
+import { BrowserRouter,  Routes, Route } from "react-router-dom";
 
 
 
@@ -17,12 +17,12 @@ function App() {
 
         <BrowserRouter>
 
-            <Router>
+            <Routes>
         <Route path="/" element={<Home/>}></Route>
        <Route path="/chat" element={<Chat/>}></Route>
        <Route path="/signin" element={<SignIn/>}></Route>
         <Route path="/signup" element={<SignUp/>}></Route>
-            </Router>
+            </Routes>
         </BrowserRouter>
 
           
