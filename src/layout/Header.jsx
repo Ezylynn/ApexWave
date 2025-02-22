@@ -1,9 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 function Header() {
+    const [menuOption, setMenuOption] = useState(false);
+
+    const onClickToOpenMenuOption = () => {
+      setMenuOption(!menuOption);
+    }
+
   return (
-    <nav className=" w-full mx-auto container flex items-center justify-between sticky max-h-16 ">
+
+   <nav className=" w-full mx-auto container flex items-center justify-between sticky max-h-16 ">
       <div className="logo">
         <svg
           className="size-16 pl-3 sm:size-20 md:size-24 lg:size-28 xl:size-32 2xl:size-36  sm:pl-6 md:pl-8 lg:pl-10 xl:pl-12 2xl:pl-14 "
