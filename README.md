@@ -5,9 +5,10 @@ A live chat application with user authentication, where you can add people and c
 ---
 
 ## 🚀 Features
-- ✅ Instant Messaging  
+
+- ✅ Instant Messaging
 - ✅ User Authentication (Support log-in method via Facebook & Google)
-- ✅ Private Chats  
+- ✅ Private Chats
 - ✅ Group Chats (coming soon)
 
 ---
@@ -18,9 +19,9 @@ A live chat application with user authentication, where you can add people and c
 
 ## 🛠️ Tech Stack
 
-| **Frontend** | **Backend** | **Database** |  
-|-------------|------------|-------------|  
-| React JS & Tailwind CSS  | Firebase | Firestore |  
+| **Frontend**            | **Backend** | **Database** |
+| ----------------------- | ----------- | ------------ |
+| React JS & Tailwind CSS | Firebase    | Firestore    |
 
 ---
 
