@@ -1,6 +1,7 @@
 import React from "react";
 import Footer from "../layout/Footer";
 import Header from "../layout/Header";
+import { useNavigate } from "react-router-dom";
 
 function Chat() {
   return (
@@ -224,6 +225,38 @@ function Chat() {
                 nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
                 quod consectetur dicta, neque inventore porro adipisci!
               </p>
+                <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
+                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
+                quod consectetur dicta, neque inventore porro adipisci!
+              </p>
+                <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
+                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
+                quod consectetur dicta, neque inventore porro adipisci!
+              </p>
+                <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
+                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
+                quod consectetur dicta, neque inventore porro adipisci!
+              </p>
+                <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
+                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
+                quod consectetur dicta, neque inventore porro adipisci!
+              </p>
+                <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
+                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
+                quod consectetur dicta, neque inventore porro adipisci!
+              </p>
+                <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
+                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
+                quod consectetur dicta, neque inventore porro adipisci!
+              </p>
+              
+
               <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
                 nostrum explicabo, eius aspernatur nesciunt eveniet facere alias

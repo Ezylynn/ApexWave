@@ -1,9 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
-    const [menuOption, setMenuOption] = useState(false);
+  const [menuOption, setMenuOption] = useState(false);
+  
+  const navigate = useNavigate()
 
     const onClickToOpenMenuOption = () => {
       setMenuOption(!menuOption);
@@ -12,7 +15,7 @@ function Header() {
   return (
 
    <nav className=" w-full mx-auto container flex items-center justify-between sticky max-h-16 ">
-      <div className="logo">
+      <div onClick={()=> navigate('/')} className="logo">
         <svg
           className="size-16 pl-3 sm:size-20 md:size-24 lg:size-28 xl:size-32 2xl:size-36  sm:pl-6 md:pl-8 lg:pl-10 xl:pl-12 2xl:pl-14 "
           viewBox="0 0 95 38"
@@ -32,29 +35,33 @@ function Header() {
         </svg>
       </div>
       {/* Mobile Menu Button */}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        popovertarget="mypopover"
-        id="mobile-menu"
-        className="block size-10 pr-3  sm:size-12 md:hidden  "
-      >
-        <path
-          fillRule="evenodd"
-          d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z"
-          clipRule="evenodd"
-        />
-      </svg>
+      <div onClick={onClickToOpenMenuOption}>
+        <svg 
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          popovertarget="mypopover"
+          id="mobile-menu"
+          className="block size-10 pr-3  sm:size-12 md:hidden  "
+        >
+          <path
+            fillRule="evenodd"
+            d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </div>
+   
 
       {/* Mobile Menu Options */}
-      <div
+      {menuOption && <div
+        
         id="mobile-options"
         className="w-full h-auto bg-[#FB8E0B] md:hidden absolute top-full flex flex-col text-base font-semibold"
       >
         <Link
           className="w-full 	flex-grow  bg-[#FB8E0B] hover:bg-teal-500 no-underline text-center py-2"
-          to="./"
+          to="/"
         >
           About
         </Link>
@@ -82,13 +89,13 @@ function Header() {
         >
           Get Started
         </Link>
-      </div>
+      </div>}
 
       <div className="w-5/6 hidden md:flex md:justify-around items-center">
         {/* Left Section */}
         <div className="w-2/3 flex items-center gap-6 justify-center">
           <Link
-            to="./"
+            to="/"
             className=" text-black py-1 no-underline text-base  xl:text-xl "
           >
             About

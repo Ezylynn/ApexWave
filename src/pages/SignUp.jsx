@@ -1,9 +1,19 @@
 import React from "react";
 import Footer from "../layout/Footer";
+import { useNavigate } from "react-router-dom";
+import {ArrowLongLeftIcon} from '@heroicons/react/24/solid' 
+
 
 function SignUp() {
+   const navigate = useNavigate()
+
   return (
     <div>
+      <div onClick={() => navigate('/')} className="absolute top-3 left-3 md:top-6 md:left-6 flex items-center gap-2">
+          <ArrowLongLeftIcon className="size-8 text-pr font-semibold text-[#FB8E0B]" />
+          <p className='text-xl font-semibold text-[#FB8E0B]'>Home</p>
+      </div>
+
       <main className="container mx-auto flex h-screen items-center justify-center ">
         <div className="flex items-center justify-center gap-8 p-10 rounded-md border-[1px] border-gray-200">
           <div className="flex h-24 flex-col items-center justify-center gap-10">

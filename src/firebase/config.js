@@ -1,20 +1,33 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 
+
+
+// Your web app's Firebase configuration
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCLfhgca9tQpLd-Ff8xjGcDMA22Kf8zN6o",
-    authDomain: "chat-app-a55eb.firebaseapp.com",
-    projectId: "chat-app-a55eb",
-    storageBucket: "chat-app-a55eb.firebasestorage.app",
-    messagingSenderId: "850469306690",
-    appId: "1:850469306690:web:76f0c71280a8654bcac8db",
-    measurementId: "G-FLLWFJFLQJ"
-  };
-  
+
+  apiKey: "AIzaSyBoN-acAjKAR-QaK08zPBEhltFUByjvgxk",
+
+  authDomain: "vchat-e5ab3.firebaseapp.com",
+
+  projectId: "vchat-e5ab3",
+
+  storageBucket: "vchat-e5ab3.firebasestorage.app",
+
+  messagingSenderId: "596644229765",
+
+  appId: "1:596644229765:web:91c65e188a844f1e5c2fec",
+
+  measurementId: "G-4X7RW99M8W"
+
+};
+
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
 
-
-  export {app, analytics}
+export { auth, googleProvider, signInWithPopup, signInWithEmailAndPassword };
