@@ -1,13 +1,15 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import Footer from "../layout/Footer";
 import { useNavigate } from "react-router-dom";
 import { auth, googleProvider, signInWithPopup, signInWithEmailAndPassword } from "../firebase/config";
-import {ArrowLongLeftIcon} from '@heroicons/react/24/solid' 
+import { ArrowLongLeftIcon } from '@heroicons/react/24/solid'
+import { FacebookAuthProvider } from "firebase/auth";
 
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const FacebookProvider = new FacebookAuthProvider();
 
   const navigate = useNavigate()
 
@@ -28,19 +30,54 @@ function SignIn() {
     try {
       await signInWithPopup(auth, googleProvider);
       alert("Google login successful! ✅");
+      console.log("result", result.user)
+      const user = result.user;
+      const userInfor = getAdditionalUserInfo(result);
+      console.log("userInfor", userInfor);
+      if (userInfor?.isNewUser) {
+        console.log("new user");
+        addDoc(collection(database, "users"),
+          {
+            displayName: user.displayName || "",
+            email: user.email || "",
+            photoURL: user.photoURL,
+            providerId: userInfor.providerId,
+            uid: user.uid,
+          })
+      }
     } catch (err) {
       setError(err.message);
     }
   };
 
+
+  const loginFacebook = async () => {
+    const result = await signInWithPopup(auth, FacebookProvider);
+    console.log("result", result.user)
+    const user = result.user;
+    const userInfor = getAdditionalUserInfo(result);
+    console.log("userInfor", userInfor);
+    if (userInfor?.isNewUser) {
+      console.log("new user");
+      addDoc(collection(database, "users"),
+        {
+          displayName: user.displayName || "",
+          email: user.email || "",
+          photoURL: user.photoURL,
+          providerId: userInfor.providerId,
+          uid: user.uid,
+        })
+    }
+  }
+
   return (
     <div>
-        <div onClick={() => navigate('/')} className="absolute top-3 left-3 md:top-6 md:left-6 flex items-center gap-2">
-          <ArrowLongLeftIcon className="size-8 text-pr font-semibold text-[#FB8E0B]" />
-          <p className='text-xl font-semibold text-[#FB8E0B]'>Home</p>
-        </div>
+      <div onClick={() => navigate('/')} className="absolute top-3 left-3 md:top-6 md:left-6 flex items-center gap-2">
+        <ArrowLongLeftIcon className="size-8 text-pr font-semibold text-[#FB8E0B]" />
+        <p className='text-xl font-semibold text-[#FB8E0B]'>Home</p>
+      </div>
       <main className="container h-screen mx-auto flex flex-col items-center justify-center gap-12">
-    
+
 
         <header className="w-full text-center">
           <p className="text-xl font-semibold">Hi, Welcome Back! 👋</p>
