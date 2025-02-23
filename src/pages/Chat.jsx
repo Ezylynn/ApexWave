@@ -1,19 +1,51 @@
-import React from "react";
-import Footer from "../layout/Footer";
-import Header from "../layout/Header";
+import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 
+
+import Footer from "../layout/Footer";
+
 function Chat() {
+  const [addUser, toggleAddUser] = useState(false) 
+  const [contactStatus, toggleContact] = useState(false)
+
+  const navigate = useNavigate()
+
+  
+
+  const [width, setWidth] = useState(window.innerWidth); //2560
+
+
+  console.log(window.innerWidth)
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setWidth(window.innerWidth);
+    });
+    return () => window.removeEventListener("resize", setWidth(window.innerWidth))
+  }, [])
+
+  function toggleBoxAddUser() {
+    toggleAddUser(!addUser)
+    
+  }
+
+
+   function toggleBoxContact() {
+     toggleContact(!contactStatus)
+     console.log(contactStatus)
+
+  }
+
+  
+
   return (
-    <div>
-      <main className="container mx-auto h-screen md:shadow-xl md:flex md:justify-center">
-        {/* add user */}
-        <div
-          id="add-box"
-          className="mx-auto mt-40 absolute left-1/2 transform -translate-x-1/2 add-box bg-white shadow-2xl rounded-lg w-[90%] sm:w-[400px] p-6 hidden z-1000"
+    <div className="flex flex-col items-center">
+        
+      {addUser && <div
+          className="w-[400px] mt-60 absolute add-box bg-white shadow-2xl rounded-lg p-6 z-20"
         >
           {/* Close Button */}
-          <button
+          <button onClick={()=> toggleBoxAddUser()}
             id="close-btn"
             className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
           >
@@ -49,17 +81,22 @@ function Chat() {
               Add User
             </button>
           </div>
-        </div>
+      </div>}
+      
+      <main className="container mx-auto h-screen md:shadow-xl md:flex md:justify-center">
+        {/* add user */}
+     
+        
         {/* contact */}
-        <section
+        {contactStatus &&    <section
           id="contact-list"
-          className="mx-auto hidden h-screen w-full flex-col items-center shadow-md md:flex md:w-[30%]"
+          className="mx-auto absolute md:static bg-white h-screen w-full flex-col items-center shadow-md md:flex md:w-[30%]"
         >
-          <nav className="flex max-h-12 w-full flex-row items-center justify-between bg-[#FB8E0B] py-4 shadow-md">
+          <nav className="fixed md:static flex max-h-12 w-full flex-row items-center justify-between bg-[#FB8E0B] py-4 shadow-md z-50">
             <p className="pl-4 text-center text-lg font-semibold text-white">
               Contacts
             </p>
-            <svg
+            <svg onClick={()=> toggleBoxContact()} 
               id="x-button"
               className="size-10 pr-4 text-white"
               aria-colspan
@@ -171,12 +208,15 @@ function Chat() {
             </div>
           </section>
         </section>
+        }
+     
+
         {/* chat message main */}
         <section id="chat-box" className="w-full md:block">
           {/* nav bar */}
-          <nav className="container fixed flex w-full flex-col items-center bg-white md:static z-10">
+          <nav className="container fixed flex w-full flex-col items-center bg-white md:static">
             <div className="flex max-h-12 w-full flex-row items-center justify-between px-4 py-8">
-              <div className="logo">
+              <div onClick={()=> navigate('/')}  className="logo">
                 <svg
                   className="size-16"
                   viewBox="0 0 95 38"
@@ -196,8 +236,8 @@ function Chat() {
                 </svg>
               </div>
               <div className="flex flex-row items-center justify-center gap-6">
-                <p id="contact">Contact</p>
-                <i
+                <p onClick={()=> toggleBoxContact()} id="contact">Contact</p>
+                <i onClick={()=> toggleBoxAddUser()}
                   id="add-button"
                   className="bx bx-message-square-add text-2xl"
                 />
@@ -305,7 +345,7 @@ function Chat() {
         </section>
       </main>
 
-      <Footer />
+      {width < 768 ? <React.Fragment></React.Fragment> : <Footer />}
     </div>
   );
 }

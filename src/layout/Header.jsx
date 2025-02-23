@@ -8,9 +8,9 @@ function Header() {
   
   const navigate = useNavigate()
 
-    const onClickToOpenMenuOption = () => {
+  const onClickToOpenMenuOption = () => {
       setMenuOption(!menuOption);
-    }
+  }
 
   return (
 
