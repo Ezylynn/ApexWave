@@ -16,8 +16,8 @@ function App() {
          <Route path="home" element={<Home />}></Route>  
         <Route path="chat" element={<Chat />}></Route>
         <Route path="contact" element={<Contact />}></Route>
-        <Route path="signin" element={<SignIn />}></Route>
-        <Route path="signup" element={<SignUp />}></Route>
+        <Route path="sign-in" element={<SignIn />}></Route>
+        <Route path="sign-up" element={<SignUp />}></Route>
       </Routes>
     </BrowserRouter>
   );

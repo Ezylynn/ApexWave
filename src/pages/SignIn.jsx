@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Footer from "../layout/Footer";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { auth, googleProvider, signInWithPopup, signInWithEmailAndPassword } from "../firebase/config";
 import { ArrowLongLeftIcon } from '@heroicons/react/24/solid'
@@ -19,7 +20,7 @@ function SignIn() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Login successful! ✅");
+      navigate('/')
     } catch (err) {
       setError(err.message);
     }
@@ -107,7 +108,7 @@ function SignIn() {
           </form>
         </section>
 
-        {/* 🔹 Google Sign-In */}
+
         <section className="flex flex-col items-center justify-center gap-4">
           <div className="w-full flex items-center justify-center">
             <div className="h-[1px] bg-gray-400 w-full" />
@@ -115,13 +116,23 @@ function SignIn() {
             <div className="h-[1px] bg-gray-400 w-full" />
           </div>
 
-          <button onClick={handleGoogleLogin} className="w-full flex items-center justify-center border border-gray-300 rounded-lg py-2 px-4">
+
+          {/* 🔹 Google Sign-In */}
+          <button onClick={handleGoogleLogin} className="w-4/5 flex items-center justify-center border border-gray-300 rounded-lg py-2 px-4">
             <img className="size-6 mr-4" src="../assets/GoogleLogo.jpg" alt="Google logo" />
-            <span className="text-sm font-semibold">Log in with Google</span>
+            <span className="w-1/2 text-sm font-semibold">Google</span>
+          </button>
+
+
+
+          {/* 🔹 Facebook Sign-In */}
+          <button onClick={handleFacebookLogin} className="w-4/5 flex items-center justify-center border border-gray-300 rounded-lg py-2 px-4">
+            <img className="size-6 mr-4" src="../assets/Facebook_Logo.png" alt="Facebook logo" />
+            <span className="w-1/2 text-sm font-semibold text-nowrap">Facebook</span>
           </button>
 
           <p>
-            Don't have an account? <a className="text-blue-600" href="./sign-up.html">Sign Up</a>
+            Don't have an account? <Link className="text-blue-600" to="/sign-up">Sign Up</Link>
           </p>
         </section>
       </main>

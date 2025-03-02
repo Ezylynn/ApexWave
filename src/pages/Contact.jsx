@@ -5,10 +5,10 @@ import Footer from "../layout/Footer";
 
 function Contact() {
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col items-center justify-between gap-12">
       <Header />
 
-      <main className="container mx-auto flex flex-col gap-12 h-screen items-center justify-center ">
+      <main className="container mx-auto flex flex-col gap-12 min-h-screen items-center justify-center ">
         {/* Title */}
         <div className="w-full flex flex-col items-center gap-4">
           <p className="font-semibold text-4xl lg:text-5xl">Contact Us!</p>
