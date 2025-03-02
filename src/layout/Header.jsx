@@ -60,32 +60,32 @@ function Header() {
         className="w-full h-auto bg-[#FB8E0B] md:hidden absolute top-full flex flex-col text-base font-semibold"
       >
         <Link
-          className="w-full 	flex-grow  bg-[#FB8E0B] hover:bg-teal-500 no-underline text-center py-2"
+          className="w-full 	flex-grow  bg-[#FB8E0B] hover:bg-[#fb8f0be0] no-underline text-center py-2"
           to="/"
         >
           About
         </Link>
         <Link
-          className="w-full 	flex-grow bg-[#FB8E0B] hover:bg-teal-500 no-underline text-center py-2"
+          className="w-full 	flex-grow bg-[#FB8E0B] hover:bg-[#FB8E0B] no-underline text-center py-2"
           to="/chat"
         >
           Demos
         </Link>
         <Link
-          className="w-full 	flex-grow bg-[#FB8E0B] hover:bg-teal-500 no-underline text-center py-2"
+          className="w-full 	flex-grow bg-[#FB8E0B] hover:bg-[#FB8E0B] no-underline text-center py-2"
           to="/contact"
         >
           Contact
         </Link>
         <Link
-          className="w-full  	flex-grow bg-[#FB8E0B] hover:bg-teal-500 no-underline text-center py-2"
-          to="/signin"
+          className="w-full  	flex-grow bg-[#FB8E0B] hover:bg-[#FB8E0B] no-underline text-center py-2"
+          to="/sign-in"
         >
           Login
         </Link>
         <Link
-          className="w-full  	flex-grow bg-[#FB8E0B] hover:bg-teal-500 no-underline text-center py-2"
-          to="/signup"
+          className="w-full  	flex-grow bg-[#FB8E0B] hover:bg-[#FB8E0B] no-underline text-center py-2"
+          to="/sign-up"
         >
           Get Started
         </Link>
@@ -96,19 +96,19 @@ function Header() {
         <div className="w-2/3 flex items-center gap-6 justify-center">
           <Link
             to="/"
-            className=" text-black py-1 no-underline text-base  xl:text-xl "
+            className=" text-black py-1 no-underline text-base  xl:text-lg "
           >
             About
           </Link>
           <Link
             to="/chat"
-            className=" text-black py-1  no-underline  text-base  xl:text-xl "
+            className=" text-black py-1  no-underline  text-base  xl:text-lg "
           >
             Demo
           </Link>
           <Link
             to="/contact"
-            className=" text-black py-1 no-underline  text-base  xl:text-xl "
+            className=" text-black py-1 no-underline  text-base  xl:text-lg "
           >
             Contact
           </Link>
@@ -116,14 +116,14 @@ function Header() {
         {/* Right Section */}
         <div className="w-1/3 flex items-center gap-8 justify-center ">
           <Link
-            to="/signin"
-            className="py-1 text-base no-underline  xl:text-xl "
+            to="/sign-in"
+            className="py-1 text-base no-underline  xl:text-lg "
           >
             Login
           </Link>
           <Link
-            to="/signup"
-            className=" bg-[#FB8E0B] no-underline  hover:bg-[#df800b] text-white rounded-lg py-2 px-5 text-base font-semibold xl:text-xl "
+            to="/sign-up"
+            className=" bg-[#FB8E0B] no-underline  hover:bg-[#df800b] text-white rounded-lg py-2 px-5 text-base font-semibold xl:text-lg "
           >
             Get Started
           </Link>

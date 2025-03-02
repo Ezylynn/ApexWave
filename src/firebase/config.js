@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
-
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider , signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword  } from "firebase/auth";
 
 
 // Your web app's Firebase configuration
@@ -29,5 +28,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
 
-export { auth, googleProvider, signInWithPopup, signInWithEmailAndPassword };
+export { auth, googleProvider, facebookProvider, createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword };
