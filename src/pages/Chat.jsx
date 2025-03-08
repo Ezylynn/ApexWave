@@ -1,16 +1,17 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 
 import Footer from "../layout/Footer";
+import { RoomContext } from "../Context/RoomProvider";
 
 function Chat() {
-  const [addUser, toggleAddUser] = useState(false) 
+  const [addUser, toggleAddUser] = useState(false)
   const [contactStatus, toggleContact] = useState(false)
 
   const navigate = useNavigate()
 
-  
+
 
   const [width, setWidth] = useState(window.innerWidth); //2560
 
@@ -26,69 +27,73 @@ function Chat() {
 
   function toggleBoxAddUser() {
     toggleAddUser(!addUser)
-    
-  }
-
-
-   function toggleBoxContact() {
-     toggleContact(!contactStatus)
-     console.log(contactStatus)
 
   }
 
-  
+
+  function toggleBoxContact() {
+    toggleContact(!contactStatus)
+    console.log(contactStatus)
+
+  }
+
+  const { rooms, isAddRoomVisible, setIsAddRoomVisible, setSelectedRoomId } =
+    useContext(RoomContext);
+  const handleAddRoom = () => {
+    setIsAddRoomVisible(true);
+  };
 
   return (
     <div className="flex flex-col items-center">
-        
+
       {addUser && <div
-          className="w-[400px] mt-60 absolute add-box bg-white shadow-2xl rounded-lg p-6 z-20"
+        className="w-[400px] mt-60 absolute add-box bg-white shadow-2xl rounded-lg p-6 z-20"
+      >
+        {/* Close Button */}
+        <button onClick={() => toggleBoxAddUser()}
+          id="close-btn"
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
         >
-          {/* Close Button */}
-          <button onClick={()=> toggleBoxAddUser()}
-            id="close-btn"
-            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+          <svg
+            className="size-10 pr-4"
+            aria-colspan
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
           >
-            <svg
-              className="size-10 pr-4"
-              aria-colspan
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-          {/* Content */}
-          <div className="flex flex-col gap-4">
-            <h2 className="text-xl font-semibold text-center">Add a User</h2>
-            <input
-              type="text"
-              id="username-input"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
-              placeholder="Enter username"
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18 18 6M6 6l12 12"
             />
-            <button
-              id="submit-btn"
-              className="w-full bg-[#FB8E0B] text-white py-2 rounded-lg hover:bg-[#db7e0d]"
-            >
-              Add User
-            </button>
-          </div>
+          </svg>
+        </button>
+        {/* Content */}
+        <div className="flex flex-col gap-4">
+          <h2 className="text-xl font-semibold text-center">Add a User</h2>
+          <input
+            type="text"
+            id="username-input"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+            placeholder="Enter username"
+          />
+          <button
+            id="submit-btn"
+            className="w-full bg-[#FB8E0B] text-white py-2 rounded-lg hover:bg-[#db7e0d]"
+          >
+            Add User
+          </button>
+        </div>
       </div>}
-      
+
       <main className="container mx-auto h-screen md:shadow-xl md:flex md:justify-center">
         {/* add user */}
-     
-        
+
+
         {/* contact */}
-        {contactStatus &&    <section
+        {contactStatus && <section
           id="contact-list"
           className="mx-auto absolute md:static bg-white h-screen w-full flex-col items-center shadow-md md:flex md:w-[30%]"
         >
@@ -96,7 +101,7 @@ function Chat() {
             <p className="pl-4 text-center text-lg font-semibold text-white">
               Contacts
             </p>
-            <svg onClick={()=> toggleBoxContact()} 
+            <svg onClick={() => toggleBoxContact()}
               id="x-button"
               className="size-10 pr-4 text-white"
               aria-colspan
@@ -115,108 +120,27 @@ function Chat() {
           </nav>
           <section className="flex w-full justify-center">
             <div className="flex w-[90%] flex-col gap-6 overflow-y-auto py-6 max-h-[90vh]">
-              <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4">
-                <p className="text-lg font-semibold">Nguyen Vuong Binh (Ezy)</p>
-                <p className="line-clamp-1 text-sm font-light">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Veritatis possimus cum quis nisi neque eum, eos, hic facere
-                  cumque saepe ex quidem quia qui, quod suscipit explicabo
-                  quaerat magnam illum.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4">
-                <p className="text-lg font-semibold">Nguyen Vuong Binh (Ezy)</p>
-                <p className="line-clamp-1 text-sm font-light">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Veritatis possimus cum quis nisi neque eum, eos, hic facere
-                  cumque saepe ex quidem quia qui, quod suscipit explicabo
-                  quaerat magnam illum.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4">
-                <p className="text-lg font-semibold">Nguyen Vuong Binh (Ezy)</p>
-                <p className="line-clamp-1 text-sm font-light">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Veritatis possimus cum quis nisi neque eum, eos, hic facere
-                  cumque saepe ex quidem quia qui, quod suscipit explicabo
-                  quaerat magnam illum.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4">
-                <p className="text-lg font-semibold">Nguyen Vuong Binh (Ezy)</p>
-                <p className="line-clamp-1 text-sm font-light">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Veritatis possimus cum quis nisi neque eum, eos, hic facere
-                  cumque saepe ex quidem quia qui, quod suscipit explicabo
-                  quaerat magnam illum.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4">
-                <p className="text-lg font-semibold">Nguyen Vuong Binh (Ezy)</p>
-                <p className="line-clamp-1 text-sm font-light">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Veritatis possimus cum quis nisi neque eum, eos, hic facere
-                  cumque saepe ex quidem quia qui, quod suscipit explicabo
-                  quaerat magnam illum.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4">
-                <p className="text-lg font-semibold">Nguyen Vuong Binh (Ezy)</p>
-                <p className="line-clamp-1 text-sm font-light">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Veritatis possimus cum quis nisi neque eum, eos, hic facere
-                  cumque saepe ex quidem quia qui, quod suscipit explicabo
-                  quaerat magnam illum.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4">
-                <p className="text-lg font-semibold">Nguyen Vuong Binh (Ezy)</p>
-                <p className="line-clamp-1 text-sm font-light">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Veritatis possimus cum quis nisi neque eum, eos, hic facere
-                  cumque saepe ex quidem quia qui, quod suscipit explicabo
-                  quaerat magnam illum.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4">
-                <p className="text-lg font-semibold">Nguyen Vuong Binh (Ezy)</p>
-                <p className="line-clamp-1 text-sm font-light">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Veritatis possimus cum quis nisi neque eum, eos, hic facere
-                  cumque saepe ex quidem quia qui, quod suscipit explicabo
-                  quaerat magnam illum.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4">
-                <p className="text-lg font-semibold">Nguyen Vuong Binh (Ezy)</p>
-                <p className="line-clamp-1 text-sm font-light">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Veritatis possimus cum quis nisi neque eum, eos, hic facere
-                  cumque saepe ex quidem quia qui, quod suscipit explicabo
-                  quaerat magnam illum.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4">
-                <p className="text-lg font-semibold">Nguyen Vuong Binh (Ezy)</p>
-                <p className="line-clamp-1 text-sm font-light">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Veritatis possimus cum quis nisi neque eum, eos, hic facere
-                  cumque saepe ex quidem quia qui, quod suscipit explicabo
-                  quaerat magnam illum.
-                </p>
-              </div>
+
+              {rooms.map((room, key) => (
+                <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4" key={key}>
+                  <p className="text-lg font-semibold">{room.name}</p>
+                  <p className="line-clamp-1 text-sm font-light">
+                    {room.description}
+                  </p>
+                </div>
+              ))}
             </div>
           </section>
         </section>
         }
-     
+
 
         {/* chat message main */}
         <section id="chat-box" className="w-full md:block">
           {/* nav bar */}
           <nav className="container fixed flex w-full flex-col items-center bg-white md:static">
             <div className="flex max-h-12 w-full flex-row items-center justify-between px-4 py-8">
-              <div onClick={()=> navigate('/')}  className="logo">
+              <div onClick={() => navigate('/')} className="logo">
                 <svg
                   className="size-16"
                   viewBox="0 0 95 38"
@@ -236,8 +160,8 @@ function Chat() {
                 </svg>
               </div>
               <div className="flex flex-row items-center justify-center gap-6">
-                <p onClick={()=> toggleBoxContact()} id="contact">Contact</p>
-                <i onClick={()=> toggleBoxAddUser()}
+                <p onClick={() => toggleBoxContact()} id="contact">Contact</p>
+                <i onClick={() => toggleBoxAddUser()}
                   id="add-button"
                   className="bx bx-message-square-add text-2xl"
                 />
@@ -245,7 +169,7 @@ function Chat() {
             </div>
             <section className="item-center mx-auto flex w-full flex-row justify-start bg-[#FB8E0B] px-6 py-4">
               <p className="font-semibold text-white">
-                Chat with <span>Binh</span>
+                Room <span>{"unknown"}</span>
               </p>
             </section>
           </nav>
@@ -255,80 +179,13 @@ function Chat() {
               <p className="max-w-[70%] self-end rounded-md bg-orange-300 px-4 py-4 text-sm leading-5">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
               </p>
-              <p className="max-w-[70%] self-end rounded-md bg-orange-300 px-4 py-4 text-sm leading-5">
-                Tempora amet sunt ut repellendus incidunt accusamus molestiae
-                fugiat debitis natus totam fugit maiores eligendi sequi culpa
-                maxime est laboriosam, praesentium animi.
-              </p>
-              <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
-                quod consectetur dicta, neque inventore porro adipisci!
-              </p>
-                <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
-                quod consectetur dicta, neque inventore porro adipisci!
-              </p>
-                <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
-                quod consectetur dicta, neque inventore porro adipisci!
-              </p>
-                <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
-                quod consectetur dicta, neque inventore porro adipisci!
-              </p>
-                <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
-                quod consectetur dicta, neque inventore porro adipisci!
-              </p>
-                <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
-                quod consectetur dicta, neque inventore porro adipisci!
-              </p>
-                <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
-                quod consectetur dicta, neque inventore porro adipisci!
-              </p>
-              
 
               <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
                 nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
-                quod consectetur dicta, neque inventore porro adipisci! Rem
-                consectetur qui iure porro hic? Lorem ipsum dolor sit amet
-                consectetur adipisicing elit. Fugiat, voluptatum iure dicta
-                aliquid, soluta nobis vero odio facilis, quaerat unde laboriosam
-                labore. Accusantium itaque ipsa alias maiores nesciunt
-                exercitationem dolorem.
+                quod consectetur dicta, neque inventore porro adipisci!
               </p>
-              <p className="max-w-[70%] self-end rounded-md bg-orange-300 px-4 py-4 text-sm leading-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora
-                amet sunt ut repellendus incidunt accusamus molestiae fugiat
-                debitis natus totam fugit maiores eligendi sequi culpa maxime
-                est laboriosam, praesentium animi.
-              </p>
-              <p className="max-w-[70%] self-end rounded-md bg-orange-300 px-4 py-4 text-sm leading-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora
-                amet sunt ut repellendus incidunt accusamus molestiae fugiat
-                debitis natus totam fugit maiores eligendi sequi culpa maxime
-                est laboriosam, praesentium animi.
-              </p>
-              <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
-                quod consectetur dicta, neque inventore porro adipisci! Rem
-                consectetur qui iure porro hic? Lorem ipsum dolor sit amet
-                consectetur adipisicing elit. Fugiat, voluptatum iure dicta
-                aliquid, soluta nobis vero odio facilis, quaerat unde laboriosam
-                labore. Accusantium itaque ipsa alias maiores nesciunt
-                exercitationem dolorem.
-              </p>
+
             </div>
             {/* Input Field */}
             <div className="container fixed bottom-0 mx-auto flex w-full items-center gap-4 bg-gray-200 p-4 md:static">

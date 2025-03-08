@@ -2,15 +2,21 @@ import React, { useState } from "react";
 import Footer from "../layout/Footer";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { auth, googleProvider, signInWithPopup, signInWithEmailAndPassword } from "../firebase/config";
+
+import {
+  auth,
+  googleProvider,
+  facebookProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "../firebase/config";
+
 import { ArrowLongLeftIcon } from '@heroicons/react/24/solid'
-import { FacebookAuthProvider } from "firebase/auth";
 
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const FacebookProvider = new FacebookAuthProvider();
 
   const navigate = useNavigate()
 
@@ -30,46 +36,20 @@ function SignIn() {
   const handleGoogleLogin = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-      alert("Google login successful! ✅");
-      console.log("result", result.user)
-      const user = result.user;
-      const userInfor = getAdditionalUserInfo(result);
-      console.log("userInfor", userInfor);
-      if (userInfor?.isNewUser) {
-        console.log("new user");
-        addDoc(collection(database, "users"),
-          {
-            displayName: user.displayName || "",
-            email: user.email || "",
-            photoURL: user.photoURL,
-            providerId: userInfor.providerId,
-            uid: user.uid,
-          })
-      }
+      navigate('/')
     } catch (err) {
       setError(err.message);
     }
   };
 
-
-  const loginFacebook = async () => {
-    const result = await signInWithPopup(auth, FacebookProvider);
-    console.log("result", result.user)
-    const user = result.user;
-    const userInfor = getAdditionalUserInfo(result);
-    console.log("userInfor", userInfor);
-    if (userInfor?.isNewUser) {
-      console.log("new user");
-      addDoc(collection(database, "users"),
-        {
-          displayName: user.displayName || "",
-          email: user.email || "",
-          photoURL: user.photoURL,
-          providerId: userInfor.providerId,
-          uid: user.uid,
-        })
+  const handleFacebookLogin = async () => {
+    try {
+      await signInWithPopup(auth, facebookProvider);
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
     }
-  }
+  };
 
   return (
     <div>
@@ -92,6 +72,8 @@ function SignIn() {
               type="email"
               placeholder="Enter Your Email"
               value={email}
+              autoComplete="new-email"
+
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
@@ -99,6 +81,8 @@ function SignIn() {
               type="password"
               placeholder="Enter Your Password"
               value={password}
+              autoComplete="new-password"
+
               onChange={(e) => setPassword(e.target.value)}
             />
             <button className="w-full bg-[#FB8E0B] text-white py-2 rounded-sm hover:bg-[#db7e0d]" type="submit">
