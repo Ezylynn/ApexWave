@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useMemo, useState } from "react";
 import { useFireStore } from "../hook/useFireStore";
 import { AuthContext } from "./AuthProvider";
+import { doc } from "firebase/firestore";
 
 export const RoomContext = createContext();
 
@@ -20,6 +21,7 @@ export default function RoomProvider({ children }) {
     }, [user]);
 
     const rooms = useFireStore("rooms", roomsCondition || {});
+
 
     return (
         <RoomContext.Provider
