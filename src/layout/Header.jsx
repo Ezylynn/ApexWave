@@ -1,21 +1,47 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../Context/AuthProvider";
 
-function Header() {
+function Header({ user }) {
   const [menuOption, setMenuOption] = useState(false);
-  
+
   const navigate = useNavigate()
 
   const onClickToOpenMenuOption = () => {
-      setMenuOption(!menuOption);
+    setMenuOption(!menuOption);
   }
+  console.log(user);
 
+
+
+  const navigateList = [
+    {
+      name: "About",
+      url: "/",
+    },
+    {
+      name: "Demo",
+      url: "/chat",
+    },
+    {
+      name: "Contact",
+      url: "/contact",
+    },
+    {
+      name: "Login",
+      url: "/sign-in",
+    },
+    {
+      name: "Get Started",
+      url: "/sign-up",
+    }
+  ]
   return (
 
-   <nav className=" w-full mx-auto container flex items-center justify-between sticky max-h-16 ">
-      <div onClick={()=> navigate('/')} className="logo">
+    <nav className=" w-full mx-auto container flex items-center justify-between sticky max-h-16 ">
+      <div onClick={() => navigate('/')} className="logo">
         <svg
           className="size-16 pl-3 sm:size-20 md:size-24 lg:size-28 xl:size-32 2xl:size-36  sm:pl-6 md:pl-8 lg:pl-10 xl:pl-12 2xl:pl-14 "
           viewBox="0 0 95 38"
@@ -36,11 +62,11 @@ function Header() {
       </div>
       {/* Mobile Menu Button */}
       <div onClick={onClickToOpenMenuOption}>
-        <svg 
+        <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
-          popovertarget="mypopover"
+          popoverTarget="mypopover"
           id="mobile-menu"
           className="block size-10 pr-3  sm:size-12 md:hidden  "
         >
@@ -51,9 +77,27 @@ function Header() {
           />
         </svg>
       </div>
-   
+
 
       {/* Mobile Menu Options */}
+      {menuOption && (
+        <div
+          id="mobile-options"
+          className="w-full h-auto bg-[#FB8E0B] md:hidden absolute top-full flex flex-col text-base font-semibold"
+        >
+          {navigateList.map((item, index) => (
+            <Link
+              key={index}
+              className="w-full flex-grow bg-[#FB8E0B] hover:bg-[#FB8E0B] no-underline text-center py-2"
+              to={item.url}
+            >
+              {item.name}
+            </Link>
+          ))}
+        </div>
+      )}
+
+=======
       {menuOption && <div
         
         id="mobile-options"
@@ -91,9 +135,25 @@ function Header() {
         </Link>
       </div>}
 
+
       <div className="w-5/6 hidden md:flex md:justify-around items-center">
         {/* Left Section */}
         <div className="w-2/3 flex items-center gap-6 justify-center">
+
+          {navigateList.map((item, index) => (
+            <Link
+              key={index}
+              className=" text-black py-1 no-underline  text-base  xl:text-lg "
+              to={item.url}
+            >
+              {item.name}
+            </Link>
+          ))}
+        </div>
+        {/* Right Section */}
+        <div className="w-1/3 flex items-center gap-8 justify-center ">
+          {user?.displayName ? (user.displayName) : (`hello world`)}
+=======
           <Link
             to="/"
             className=" text-black py-1 no-underline text-base  xl:text-lg "

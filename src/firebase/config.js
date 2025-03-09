@@ -1,13 +1,20 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider , signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword  } from "firebase/auth";
 
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  connectAuthEmulator,
+} from "firebase/auth";
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+=======
 
 // Your web app's Firebase configuration
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 const firebaseConfig = {
-
   apiKey: "AIzaSyBoN-acAjKAR-QaK08zPBEhltFUByjvgxk",
 
   authDomain: "vchat-e5ab3.firebaseapp.com",
@@ -20,14 +27,15 @@ const firebaseConfig = {
 
   appId: "1:596644229765:web:91c65e188a844f1e5c2fec",
 
-  measurementId: "G-4X7RW99M8W"
-
+  measurementId: "G-4X7RW99M8W",
 };
 
-  // Initialize Firebase
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
+
 export { auth, googleProvider, facebookProvider, createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword };
+

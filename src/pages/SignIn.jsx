@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import Footer from "../layout/Footer";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -7,11 +7,12 @@ import {
   auth,
   googleProvider,
   facebookProvider,
-  signInWithEmailAndPassword ,
+  signInWithEmailAndPassword,
   signInWithPopup,
 } from "../firebase/config";
 
-import {ArrowLongLeftIcon} from '@heroicons/react/24/solid' 
+import { ArrowLongLeftIcon } from '@heroicons/react/24/solid'
+
 
 function SignIn() {
   const [email, setEmail] = useState("");
@@ -46,6 +47,7 @@ function SignIn() {
     try {
       await signInWithPopup(auth, facebookProvider);
       navigate("/"); 
+
     } catch (err) {
       setError(err.message);
     }
@@ -53,12 +55,12 @@ function SignIn() {
 
   return (
     <div>
-        <div onClick={() => navigate('/')} className="absolute top-3 left-3 md:top-6 md:left-6 flex items-center gap-2">
-          <ArrowLongLeftIcon className="size-8 text-pr font-semibold text-[#FB8E0B]" />
-          <p className='text-xl font-semibold text-[#FB8E0B]'>Home</p>
-        </div>
+      <div onClick={() => navigate('/')} className="absolute top-3 left-3 md:top-6 md:left-6 flex items-center gap-2">
+        <ArrowLongLeftIcon className="size-8 text-pr font-semibold text-[#FB8E0B]" />
+        <p className='text-xl font-semibold text-[#FB8E0B]'>Home</p>
+      </div>
       <main className="container h-screen mx-auto flex flex-col items-center justify-center gap-12">
-    
+
 
         <header className="w-full text-center">
           <p className="text-xl font-semibold">Hi, Welcome Back! 👋</p>
@@ -72,6 +74,8 @@ function SignIn() {
               type="email"
               placeholder="Enter Your Email"
               value={email}
+              autoComplete="new-email"
+
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
@@ -79,6 +83,8 @@ function SignIn() {
               type="password"
               placeholder="Enter Your Password"
               value={password}
+              autoComplete="new-password"
+
               onChange={(e) => setPassword(e.target.value)}
             />
             <button className="w-full bg-[#FB8E0B] text-white py-2 rounded-sm hover:bg-[#db7e0d]" type="submit">
@@ -96,7 +102,6 @@ function SignIn() {
             <div className="h-[1px] bg-gray-400 w-full" />
           </div>
 
-          
           {/* 🔹 Google Sign-In */}
           <button onClick={handleGoogleLogin} className="w-4/5 flex items-center justify-center border border-gray-300 rounded-lg py-2 px-4">
             <img className="size-6 mr-4" src="../assets/GoogleLogo.jpg" alt="Google logo" />

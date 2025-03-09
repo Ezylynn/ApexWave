@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
+import { AuthContext } from "../Context/AuthProvider";
 
 
 function Home() {
+  const { user } = useContext(AuthContext);
+  console.log(user);
+
   return (
     <div>
-      <Header></Header>
+      <Header user={user} ></Header>
       <main className="mt-2 mx-auto container flex flex-col items-center justify-between gap-5 bg-white md:flex-row">
         <div className="flex w-full flex-col content-between p-10 md:w-1/2">
           <div>
@@ -219,7 +223,7 @@ function Home() {
           <img
             className="mx-auto w-4/5 max-w-sm md:w-1/2 md:max-w-md"
             src="../assets/woman-with-video-call.png"
-            alt
+
           />
           {/* Text Section */}
           <div className="flex w-full flex-col items-center gap-5 md:w-1/2 md:items-start">
@@ -243,7 +247,7 @@ function Home() {
           <img
             className="mx-auto w-4/5 max-w-sm md:w-1/2 md:max-w-md"
             src="../assets/chat-demo.png"
-            alt
+
           />
           {/* Text Section */}
           <div className="flex w-full flex-col items-center gap-5 md:w-1/2 md:items-start">
@@ -295,7 +299,7 @@ function Home() {
                 </p>
               </div>
               <div className="mt-6 flex flex-row justify-center">
-                <img className="w-16" src="../assets/african-woman.png" alt />
+                <img className="w-16" src="../assets/african-woman.png" />
                 <div className="flex flex-col justify-evenly pl-4">
                   <p className="font-medium text-white">Wade Warren</p>
                   <p className="font-light text-white">CEO of ABC Coporation</p>
@@ -316,7 +320,7 @@ function Home() {
                 </p>
               </div>
               <div className="mt-6 flex flex-row justify-center">
-                <img className="w-16" src="../assets/sitting-woman.png" alt />
+                <img className="w-16" src="../assets/sitting-woman.png" />
                 <div className="flex flex-col justify-evenly pl-4">
                   <p className="font-medium text-white">Esward Howard</p>
                   <p className="font-light text-white">Founder of CHAMELLIA</p>
@@ -328,7 +332,7 @@ function Home() {
       </main>
 
       <Footer></Footer>
-    </div>
+    </div >
   );
 }
 
