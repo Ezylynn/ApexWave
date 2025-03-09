@@ -11,11 +11,7 @@ function Chat() {
 
   const navigate = useNavigate()
 
-
-
   const [width, setWidth] = useState(window.innerWidth); //2560
-
-
   console.log(window.innerWidth)
 
   useEffect(() => {
@@ -42,6 +38,22 @@ function Chat() {
   const handleAddRoom = () => {
     setIsAddRoomVisible(true);
   };
+
+  const { user } = useContext(AuthContext);
+
+
+  /*
+  Them phương thúc Add room, flow add room -> hiện modal -> nhập thông tin -> submit -> gọi hàm addDocument 
+  (hãy nhớ là mình sẽ cho bản thân mình vào trong room đó luôn)
+  cấu trúc của rooms
+  rooms: [
+    {
+      id: 1,
+      name: "Room 1",
+      description: "Description 1",
+      users: ["uid"],
+  */
+
 
   return (
     <div className="flex flex-col items-center">
