@@ -12,6 +12,7 @@ import RoomProvider from "./Context/RoomProvider";
 function App() {
   return (
     <BrowserRouter>
+
       <AuthProvider>
         <RoomProvider>
           <Routes>
@@ -24,6 +25,7 @@ function App() {
           </Routes>
         </RoomProvider>
       </AuthProvider>
+
     </BrowserRouter>
   );
 }

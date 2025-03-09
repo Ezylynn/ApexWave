@@ -13,6 +13,7 @@ import {
 
 import { ArrowLongLeftIcon } from '@heroicons/react/24/solid'
 
+
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,11 +42,12 @@ function SignIn() {
       setError(err.message);
     }
   };
-
+  
   const handleFacebookLogin = async () => {
     try {
       await signInWithPopup(auth, facebookProvider);
-      navigate("/");
+      navigate("/"); 
+
     } catch (err) {
       setError(err.message);
     }
@@ -99,7 +101,6 @@ function SignIn() {
             <span className="mx-4 text-light whitespace-nowrap">Or With</span>
             <div className="h-[1px] bg-gray-400 w-full" />
           </div>
-
 
           {/* 🔹 Google Sign-In */}
           <button onClick={handleGoogleLogin} className="w-4/5 flex items-center justify-center border border-gray-300 rounded-lg py-2 px-4">

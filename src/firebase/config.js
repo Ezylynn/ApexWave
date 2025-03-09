@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+
 import {
   getAuth,
   GoogleAuthProvider,
@@ -7,6 +8,8 @@ import {
   connectAuthEmulator,
 } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+=======
+
 // Your web app's Firebase configuration
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -31,5 +34,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
 
-export { auth, googleProvider, signInWithPopup, signInWithEmailAndPassword };
+
+export { auth, googleProvider, facebookProvider, createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword };
+
