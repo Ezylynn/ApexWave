@@ -1,13 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../Context/AuthProvider";
 
 
 import Footer from "../layout/Footer";
 import { RoomContext } from "../Context/RoomProvider";
 
+
 function Chat() {
   const [addUser, toggleAddUser] = useState(false)
   const [contactStatus, toggleContact] = useState(false)
+
+  const [roomName, getRoomName] = useState(null)
+  const [roomDesc, getRoomDesc] = useState(null)
+  
+
 
   const navigate = useNavigate()
 
@@ -41,6 +48,19 @@ function Chat() {
 
   const { user } = useContext(AuthContext);
 
+  const [addRoomBox, addRoom] = useState(false)
+
+  function toggleAddRoom() {
+    addRoom(!addRoomBox)
+  }
+
+  function createRoom() {
+    console.log(roomName)
+      console.log(roomDesc)
+
+  }
+
+
 
   /*
   Them phương thúc Add room, flow add room -> hiện modal -> nhập thông tin -> submit -> gọi hàm addDocument 
@@ -51,9 +71,10 @@ function Chat() {
       id: 1,
       name: "Room 1",
       description: "Description 1",
-      users: ["uid"],
+      members: ["uid"],
   */
 
+  
 
   return (
     <div className="flex flex-col items-center">
@@ -100,6 +121,67 @@ function Chat() {
         </div>
       </div>}
 
+      
+      {addRoomBox && <div
+        className="w-[400px] mt-60 absolute add-box bg-white shadow-2xl rounded-lg p-6 z-20"
+      >
+        {/* Close Button */}
+        <button onClick={toggleAddRoom}
+          id="close-btn"
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+        >
+    
+                      <svg
+            className="size-10 pr-4"
+            aria-colspan
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
+          </svg>
+            
+    
+
+        </button>
+
+        {/* Content */}
+        <div className="flex flex-col gap-4">
+          <h2 className="text-xl font-semibold text-center">Create a Room</h2>
+          <input
+            type="text"
+            value={roomName}
+            onChange={(e) => getRoomName(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+            placeholder="Enter a name for the room"
+          />
+           <input
+            type="text"
+            value={roomDesc}
+            onChange={(e) => getRoomDesc(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+            placeholder="Enter a description for the room"
+          />
+          <button
+            onClick={createRoom}
+            id="submit-btn"
+            className="w-full bg-[#FB8E0B] text-white py-2 rounded-lg hover:bg-[#db7e0d]"
+          >
+            Create Room
+          </button>
+        </div>
+      </div>}
+
+    
+
+
+
       <main className="container mx-auto h-screen md:shadow-xl md:flex md:justify-center">
         {/* add user */}
 
@@ -141,7 +223,7 @@ function Chat() {
                   </p>
                 </div>
               ))}
-              <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4 items-center justify-center">
+              <div  onClick={toggleAddRoom} className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4 items-center justify-center">
                 <p className="text-lg font-semibold"><span> + </span>Add room</p>
               </div>
             </div>
@@ -176,16 +258,18 @@ function Chat() {
               </div>
               <div className="flex flex-row items-center justify-center gap-6">
                 <p onClick={() => toggleBoxContact()} id="contact">Contact</p>
-                <i onClick={() => toggleBoxAddUser()}
-                  id="add-button"
-                  className="bx bx-message-square-add text-2xl"
-                />
+
               </div>
             </div>
-            <section className="item-center mx-auto flex w-full flex-row justify-start bg-[#FB8E0B] px-6 py-4">
+            <section className="item-center mx-auto flex w-full flex-row justify-between bg-[#FB8E0B] px-6 py-4">
               <p className="font-semibold text-white">
                 Room <span>{"unknown"}</span>
               </p>
+
+              <i onClick={() => toggleBoxAddUser()}
+                  id="add-button"
+                  className="bx bx-message-square-add text-2xl text-white"
+              />
             </section>
           </nav>
           <section className="flex w-full flex-col md:h-4/5">
