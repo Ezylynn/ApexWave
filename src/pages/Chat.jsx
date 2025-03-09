@@ -5,13 +5,14 @@ import { AuthContext } from "../Context/AuthProvider";
 
 import Footer from "../layout/Footer";
 import { RoomContext } from "../Context/RoomProvider";
-import { addDoc } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { addDocument } from "../firebase/services";
+import { db } from "../firebase/config";
 
 function Chat() {
   const [addUser, toggleAddUser] = useState(false)
   const [contactStatus, toggleContact] = useState(false)
-
+  const [allUsers, setAllUsers] = useState(null)
   const [roomName, getRoomName] = useState(null)
   const [roomDesc, getRoomDesc] = useState(null)
   const [clickRoomId, setClickRoomId] = useState(null);
@@ -21,6 +22,14 @@ function Chat() {
 
   const [width, setWidth] = useState(window.innerWidth); //2560
   // console.log(window.innerWidth)
+
+  const [selectedUid, setSelectedUid] = useState("");
+
+  const handleAddUser = (event) => {
+    setSelectedUid(event.target.value);
+    console.log("UID được chọn:", event.target.value);
+  };
+
 
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -41,9 +50,8 @@ function Chat() {
 
   }
 
-  const { rooms, isAddRoomVisible, setIsAddRoomVisible, setSelectedRoomId, allUsers } =
+  const { rooms, isAddRoomVisible, setIsAddRoomVisible, setSelectedRoomId } =
     useContext(RoomContext);
-  console.log(allUsers);
   const handleAddRoom = () => {
     setIsAddRoomVisible(true);
   };
@@ -102,6 +110,17 @@ function Chat() {
   }
 
 
+  // const getUsers = async () => {
+  //   try {
+  //     const querySnapshot = await getDocs(collection(db, "users"));
+  //     const document = querySnapshot.docs.map((doc) => doc.data());
+  //     console.log(document);
+  //     setAllUsers(document);
+  //   } catch (error) {
+  //     console.error("Lỗi khi lấy dữ liệu:", error);
+  //   }
+  // };
+  // getUsers();
 
   return (
     <div className="flex flex-col items-center">
@@ -139,6 +158,17 @@ function Chat() {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
             placeholder="Enter username"
           />
+          <div class="custom-select">
+            <select onChange={handleAddUser}>
+              {allUsers.map((user) => (
+                <option key={user.uid} value={user.uid}>
+                  {user.displayName}
+                </option>
+              ))}
+            </select>
+
+          </div>
+
           <button
             id="submit-btn"
             className="w-full bg-[#FB8E0B] text-white py-2 rounded-lg hover:bg-[#db7e0d]"
