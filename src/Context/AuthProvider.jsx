@@ -16,6 +16,12 @@ export default function AuthProvider({ children }) {
         try {
           let { displayName, email, uid, photoURL } = user;
 
+          //Vi sao phai thêm displayName
+          /*
+          Khi anh đăng kí bằng email and Passsword thì bị 1 tình trạng là Auth và Firestore của 
+          anh không cập nhật displayName. Nên khi anh đăng nhập vào thì displayName = null.
+          Vì vậy anh phải lấy displayName từ Firestore để cập nhật cho Auth.
+          */
           if (!displayName) {
             const userRef = doc(db, "users", uid);
             const userSnap = await getDoc(userRef);
@@ -33,6 +39,11 @@ export default function AuthProvider({ children }) {
 
           setUser((prevUser) => {
             if (
+              /*
+              prevUser là state trước đó, cụ thể là User
+              Nếu prevUser = null thì cập nhật luôn. ( dấu ! trong đây là if ( prevUser === null), Dấu || là hoặc)
+              Nếu prevUser khác null thì kiểm tra xem có thay đổi không.
+              */
               !prevUser ||
               prevUser.displayName !== displayName ||
               prevUser.email !== email ||
@@ -43,6 +54,7 @@ export default function AuthProvider({ children }) {
             }
             return prevUser;
           });
+
         } catch (error) {
           console.error("Lỗi khi lấy dữ liệu người dùng:", error);
         }

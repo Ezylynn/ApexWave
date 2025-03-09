@@ -6,9 +6,9 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
   connectAuthEmulator,
+  FacebookAuthProvider,
 } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
-=======
 
 // Your web app's Firebase configuration
 
@@ -35,7 +35,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
+const db = getFirestore(app)
 
-
-export { auth, googleProvider, facebookProvider, createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword };
+export { auth, googleProvider, facebookProvider, signInWithPopup, signInWithEmailAndPassword, db };
 

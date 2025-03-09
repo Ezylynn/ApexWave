@@ -97,49 +97,10 @@ function Header({ user }) {
         </div>
       )}
 
-=======
-      {menuOption && <div
-        
-        id="mobile-options"
-        className="w-full h-auto bg-[#FB8E0B] md:hidden absolute top-full flex flex-col text-base font-semibold"
-      >
-        <Link
-          className="w-full 	flex-grow  bg-[#FB8E0B] hover:bg-[#fb8f0be0] no-underline text-center py-2"
-          to="/"
-        >
-          About
-        </Link>
-        <Link
-          className="w-full 	flex-grow bg-[#FB8E0B] hover:bg-[#FB8E0B] no-underline text-center py-2"
-          to="/chat"
-        >
-          Demos
-        </Link>
-        <Link
-          className="w-full 	flex-grow bg-[#FB8E0B] hover:bg-[#FB8E0B] no-underline text-center py-2"
-          to="/contact"
-        >
-          Contact
-        </Link>
-        <Link
-          className="w-full  	flex-grow bg-[#FB8E0B] hover:bg-[#FB8E0B] no-underline text-center py-2"
-          to="/sign-in"
-        >
-          Login
-        </Link>
-        <Link
-          className="w-full  	flex-grow bg-[#FB8E0B] hover:bg-[#FB8E0B] no-underline text-center py-2"
-          to="/sign-up"
-        >
-          Get Started
-        </Link>
-      </div>}
-
 
       <div className="w-5/6 hidden md:flex md:justify-around items-center">
         {/* Left Section */}
         <div className="w-2/3 flex items-center gap-6 justify-center">
-
           {navigateList.map((item, index) => (
             <Link
               key={index}
@@ -153,40 +114,6 @@ function Header({ user }) {
         {/* Right Section */}
         <div className="w-1/3 flex items-center gap-8 justify-center ">
           {user?.displayName ? (user.displayName) : (`hello world`)}
-=======
-          <Link
-            to="/"
-            className=" text-black py-1 no-underline text-base  xl:text-lg "
-          >
-            About
-          </Link>
-          <Link
-            to="/chat"
-            className=" text-black py-1  no-underline  text-base  xl:text-lg "
-          >
-            Demo
-          </Link>
-          <Link
-            to="/contact"
-            className=" text-black py-1 no-underline  text-base  xl:text-lg "
-          >
-            Contact
-          </Link>
-        </div>
-        {/* Right Section */}
-        <div className="w-1/3 flex items-center gap-8 justify-center ">
-          <Link
-            to="/sign-in"
-            className="py-1 text-base no-underline  xl:text-lg "
-          >
-            Login
-          </Link>
-          <Link
-            to="/sign-up"
-            className=" bg-[#FB8E0B] no-underline  hover:bg-[#df800b] text-white rounded-lg py-2 px-5 text-base font-semibold xl:text-lg "
-          >
-            Get Started
-          </Link>
         </div>
       </div>
     </nav>

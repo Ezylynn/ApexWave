@@ -129,6 +129,9 @@ function Chat() {
                   </p>
                 </div>
               ))}
+              <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4 items-center justify-center">
+                <p className="text-lg font-semibold"><span> + </span>Add room</p>
+              </div>
             </div>
           </section>
         </section>
