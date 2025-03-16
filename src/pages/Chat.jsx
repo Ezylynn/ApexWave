@@ -5,18 +5,33 @@ import { AuthContext } from "../Context/AuthProvider";
 
 import Footer from "../layout/Footer";
 import { RoomContext } from "../Context/RoomProvider";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs, updateDoc } from "firebase/firestore";
 import { addDocument } from "../firebase/services";
 import { db } from "../firebase/config";
 
 function Chat() {
   const [addUser, toggleAddUser] = useState(false)
-  const [contactStatus, toggleContact] = useState(false)
-  const [allUsers, setAllUsers] = useState(null)
+  const [contactList, toggleContact] = useState(false)
+  // const [allUsers, setAllUsers] = useState(null)
+  const { user } = useContext(AuthContext);
+
+//room data
+  const [addRoomBox, addRoom] = useState(false)
   const [roomName, getRoomName] = useState(null)
   const [roomDesc, getRoomDesc] = useState(null)
-  const [clickRoomId, setClickRoomId] = useState(null);
+
+  // du lieu tin nhan gui tin nhan di
+  const [message, getMessage] = useState(null)
+  
+
+  //set room id back to null later, true is set for testing purpose
+  const [RoomId, setRoomId] = useState(true);
+
   const [roomDetail, setRoomDetail] = useState(null)
+
+  
+
+
 
   const navigate = useNavigate()
 
@@ -30,7 +45,7 @@ function Chat() {
     console.log("UID được chọn:", event.target.value);
   };
 
-
+  // listen to window size to adjust footer responsiveness
   useEffect(() => {
     window.addEventListener("resize", () => {
       setWidth(window.innerWidth);
@@ -45,20 +60,18 @@ function Chat() {
 
 
   function toggleBoxContact() {
-    toggleContact(!contactStatus)
-    console.log(contactStatus)
+    toggleContact(!contactList)
+    console.log(contactList)
 
   }
 
   const { rooms, isAddRoomVisible, setIsAddRoomVisible, setSelectedRoomId } =
     useContext(RoomContext);
+  
+    
   const handleAddRoom = () => {
     setIsAddRoomVisible(true);
   };
-
-  const { user } = useContext(AuthContext);
-
-  const [addRoomBox, addRoom] = useState(false)
 
   function toggleAddRoom() {
     addRoom(!addRoomBox)
@@ -66,9 +79,46 @@ function Chat() {
 
 
   const getDetailRoom = (room) => {
-    setClickRoomId(room.id);
+    setRoomId(room.id);
     setRoomDetail(room);
   }
+
+  const sendMessagetoFireStore = async() => {
+
+    //catch error
+    if (!message) {
+      return;
+    }
+
+    console.log(user.displayName)
+    console.log(user.uid)
+    // console.log(RoomId)
+    // console.log(message)
+    try {
+      const roomID = doc(db, 'rooms', RoomId)
+
+      await updateDoc(
+        roomID, {
+        messages: arrayUnion({
+          content: message,
+          displayName: user.displayName,
+          time: new Date(),
+          uid: user.uid
+        })
+      }
+
+      )
+    }
+
+    catch {
+      console.log()
+    }
+  }
+  
+
+
+  //database
+
 
   /*
   Them phương thúc Add room, flow add room -> hiện modal -> nhập thông tin -> submit -> gọi hàm addDocument 
@@ -102,6 +152,8 @@ function Chat() {
       name: roomName,
       description: roomDesc,
       members: [user.uid],
+      message: []
+
     });
 
     getRoomName('');
@@ -121,6 +173,8 @@ function Chat() {
   //   }
   // };
   // getUsers();
+
+
 
   return (
     <div className="flex flex-col items-center">
@@ -158,7 +212,7 @@ function Chat() {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
             placeholder="Enter username"
           />
-          <div class="custom-select">
+          {/* <div class="custom-select">
             <select onChange={handleAddUser}>
               {allUsers.map((user) => (
                 <option key={user.uid} value={user.uid}>
@@ -167,7 +221,7 @@ function Chat() {
               ))}
             </select>
 
-          </div>
+          </div> */}
 
           <button
             id="submit-btn"
@@ -236,15 +290,12 @@ function Chat() {
       </div>}
 
 
-
-
-
       <main className="container mx-auto h-screen md:shadow-xl md:flex md:justify-center">
         {/* add user */}
 
 
         {/* contact */}
-        {contactStatus && <section
+        {contactList && <section
           id="contact-list"
           className="mx-auto absolute md:static bg-white h-screen w-full flex-col items-center shadow-md md:flex md:w-[30%]"
         >
@@ -318,7 +369,7 @@ function Chat() {
             </div>
           </div>
           {
-            clickRoomId ? (
+            RoomId ? (
               <div>
                 <nav className="container fixed flex w-full flex-col items-center bg-white md:static">
 
@@ -349,17 +400,32 @@ function Chat() {
                   </div>
                   {/* Input Field */}
                   <div className="container fixed bottom-0 mx-auto flex w-full items-center gap-4 bg-gray-200 p-4 md:static">
-                    <input
+                    <input value={message}
+                      onChange={(e) => getMessage(e.target.value)}
                       className="flex-1 rounded-lg border p-2 bg-white focus:outline-none focus:ring focus:ring-orange-300"
                       type="text"
                       placeholder="Write a message"
                     />
-                    <button className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600">
+                    <button onClick={sendMessagetoFireStore} className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600">
                       Send
                     </button>
                   </div>
                 </section>
-              </div>) : ("undefined")
+              </div>) : (
+              <div className="w-full container min-h-screen bg-slate-100 flex flex-col justify-center items-center text-gray-500">
+                <p className="text-xl font-semibold">No contacts or group chats yet</p>
+                  <p className="text-md">Add friends or create a group chat to start chatting</p>
+                <div className="w-full flex flex-row justify-center items-center gap-8">
+                <button
+                  onClick={() => toggleBoxAddUser()} 
+                  className="mt-4 px-6 py-2 bg-[#FB8E0B] text-white rounded-lg hover:bg-orange-600"
+                >
+                  Add User
+                    </button> 
+                </div>
+
+              </div>
+              )
           }
 
         </section>

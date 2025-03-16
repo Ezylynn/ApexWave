@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { AuthContext } from "../Context/AuthProvider";
@@ -7,6 +7,8 @@ import { AuthContext } from "../Context/AuthProvider";
 function Home() {
   const { user } = useContext(AuthContext);
   console.log(user);
+
+ 
 
   return (
     <div>

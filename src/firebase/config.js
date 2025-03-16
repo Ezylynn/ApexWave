@@ -37,5 +37,9 @@ const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 const db = getFirestore(app)
 
+
+
 export { auth, googleProvider, facebookProvider, signInWithPopup, signInWithEmailAndPassword, db };
+
+  
 
