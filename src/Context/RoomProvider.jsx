@@ -23,6 +23,8 @@ export default function RoomProvider({ children }) {
     const rooms = useFireStore("rooms", roomsCondition || {});
 
 
+    
+
     return (
         <RoomContext.Provider
             value={{

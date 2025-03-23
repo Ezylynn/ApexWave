@@ -5,7 +5,7 @@ import { AuthContext } from "../Context/AuthProvider";
 
 import Footer from "../layout/Footer";
 import { RoomContext } from "../Context/RoomProvider";
-import { addDoc, doc, collection, getDocs, setDoc, updateDoc, getDoc} from "firebase/firestore";
+import { addDoc, doc, collection, getDocs, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { addDocument } from "../firebase/services";
 import { db } from "../firebase/config";
 import { async } from "@firebase/util";
@@ -16,14 +16,14 @@ function Chat() {
   // const [allUsers, setAllUsers] = useState(null)
   const { user } = useContext(AuthContext);
 
-//room data
+  //room data
   const [addRoomBox, addRoom] = useState(false)
   const [roomName, getRoomName] = useState(null)
   const [roomDesc, getRoomDesc] = useState(null)
-
+  const [userAvailable, setUserAvailable] = useState(null)
   // message data
   const [message, getMessage] = useState(null)
-  
+
   const [messageExist, setMessageExist] = useState(null)
 
   const [messageArray, setMessageArray] = useState(null)
@@ -53,11 +53,6 @@ function Chat() {
     return () => window.removeEventListener("resize", setWidth(window.innerWidth))
   }, [])
 
-  function toggleBoxAddUser() {
-    toggleAddUser(!addUser)
-
-  }
-
 
   function toggleBoxContact() {
     toggleContact(!contactList)
@@ -68,8 +63,8 @@ function Chat() {
 
   const { rooms, isAddRoomVisible, setIsAddRoomVisible, setSelectedroomID } =
     useContext(RoomContext);
-  
-    
+
+
   // const handleAddRoom = () => {
   //   setIsAddRoomVisible(true);
   // };
@@ -85,23 +80,23 @@ function Chat() {
   }
 
   const sendMessagetoFireStore = async () => {
-  
+
     //catch error
     if (!message) {
       return;
     }
 
- 
+
     try {
       const roomRef = doc(db, 'rooms', roomID)
       // console.log(roomRef)
       const roomList = await getDoc(roomRef)
       let time = new Date()
       let newMessage = {
-          content: message,
-          displayName: user.displayName,
-          time: `${time.getHours()}:${time.getMinutes()}`,
-          uid: user.uid
+        content: message,
+        displayName: user.displayName,
+        time: `${time.getHours()}:${time.getMinutes()}`,
+        uid: user.uid
       }
       const currentMessageList = roomList.exists() ? roomList.data().messageList || [] : []
       // exists() firebase method, check if document exist or not, return true or false
@@ -109,8 +104,8 @@ function Chat() {
       // console.log(currentMessageList)
       await updateDoc(
         roomRef, {
-          messageList: [...currentMessageList, newMessage]
-        }
+        messageList: [...currentMessageList, newMessage]
+      }
       )
     }
 
@@ -118,7 +113,7 @@ function Chat() {
       console.log('Cannot upload data onto firebase', error)
     }
   }
-  
+
 
 
   useEffect(() => {
@@ -128,15 +123,15 @@ function Chat() {
       setMessageExist(true)
       console.log(chatDatabase)
     }
-    
 
-    async function fetchMessage(){
+
+    async function fetchMessage() {
       try {
         const roomRef = doc(db, 'rooms', roomID)
         const chatList = await getDoc(roomRef)
         const chatDatabase = chatList.data().messageList
         storeMessage(chatDatabase)
-  
+
       }
       catch (error) {
         console.log('Unable to fetch data from firebase', error)
@@ -145,13 +140,35 @@ function Chat() {
 
 
     fetchMessage()
-  
 
-  }, [roomID,sendMessagetoFireStore]
+
+  }, [roomID, sendMessagetoFireStore]
   )
 
+  // lay ra danh sach user available
+  // console.log(querySnapShot);
+  //ddaya la mot doi tuong tra ve khi ma truy van getDocs
+  //querysnapshot se tra ve danh sach tat ca cac tai lieu document
 
-  //database
+  const fetchUser = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "users"));
+      console.log(querySnapshot) //querysnapshot la 1 object
+      const getAllUserDocs = querySnapshot.docs.map((doc) => doc.data());
+      setUserAvailable(getAllUserDocs);
+      console.log(getAllUserDocs);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  function toggleBoxAddUser() {
+    toggleAddUser(!addUser)
+    fetchUser();
+
+
+  }
 
 
   /*
@@ -214,113 +231,114 @@ function Chat() {
       <main className="container relative mx-auto h-screen  md:shadow-xl md:flex md:justify-center">
         {/* add user */}
 
-      {addUser && <div
-        className="w-[400px] mt-60 left-1/4 md:left-1/2 md:-translate-x-1/2 absolute bg-white shadow-2xl rounded-lg p-6 z-200 transition-all"
-      >
-        {/* Close Button */}
-        <button onClick={() => toggleBoxAddUser()}
-          id="close-btn"
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+        {addUser && <div
+          className="w-[400px] mt-60 left-1/4 md:left-1/2 md:-translate-x-1/2 absolute bg-white shadow-2xl rounded-lg p-6 z-200 transition-all"
         >
-          <svg
-            className="size-10 pr-4"
-            aria-colspan
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
+          {/* Close Button */}
+          <button onClick={() => toggleBoxAddUser()}
+            id="close-btn"
+            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18 18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-        {/* Content */}
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xl font-semibold text-center">Add a User</h2>
-          <input
-            type="text"
-            id="username-input"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
-            placeholder="Enter username"
-          />
-          {/* <div class="custom-select">
-            <select onChange={handleAddUser}>
-              {allUsers.map((user) => (
-                <option key={user.uid} value={user.uid}>
-                  {user.displayName}
-                </option>
-              ))}
-            </select>
-
-          </div> */}
-
-          <button
-            id="submit-btn"
-            className="w-full bg-[#FB8E0B] text-white py-2 rounded-lg hover:bg-[#db7e0d]"
-          >
-            Add User
+            <svg
+              className="size-10 pr-4"
+              aria-colspan
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
           </button>
-        </div>
-      </div>}
+          {/* Content */}
+          <div className="flex flex-col gap-4">
+            <h2 className="text-xl font-semibold text-center">Add a User</h2>
+            <input
+              type="text"
+              id="username-input"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+              placeholder="Enter username"
+            />
+            <div class="custom-select">
+              <select onChange={handleAddUser}>
+                {userAvailable?.map((user) => (
+                  <option key={user.uid} value={user.uid}>
+                    {user.displayName}
+                  </option>
+                ))}
+              </select>
 
 
-      {addRoomBox && <div
-        className="w-[400px] mt-60 left-1/4 md:left-1/2 md:-translate-x-1/2 absolute bg-white shadow-2xl rounded-lg p-6 z-200 transition-all"
-      >
-        {/* Close Button */}
-        <button onClick={toggleAddRoom}
-          id="close-btn"
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+            </div>
+
+            <button
+              id="submit-btn"
+              className="w-full bg-[#FB8E0B] text-white py-2 rounded-lg hover:bg-[#db7e0d]"
+            >
+              Add User
+            </button>
+          </div>
+        </div>}
+
+
+        {addRoomBox && <div
+          className="w-[400px] mt-60 left-1/4 md:left-1/2 md:-translate-x-1/2 absolute bg-white shadow-2xl rounded-lg p-6 z-200 transition-all"
         >
-
-          <svg
-            className="size-10 pr-4"
-            aria-colspan
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
+          {/* Close Button */}
+          <button onClick={toggleAddRoom}
+            id="close-btn"
+            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18 18 6M6 6l12 12"
-            />
-          </svg>
 
-        </button>
+            <svg
+              className="size-10 pr-4"
+              aria-colspan
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
 
-        {/* Content */}
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xl font-semibold text-center">Create a Room</h2>
-          <input
-            type="text"
-            value={roomName}
-            onChange={(e) => getRoomName(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
-            placeholder="Enter a name for the room"
-          />
-          <input
-            type="text"
-            value={roomDesc}
-            onChange={(e) => getRoomDesc(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
-            placeholder="Enter a description for the room"
-          />
-          <button
-            onClick={createRoom}
-            id="submit-btn"
-            className="w-full bg-[#FB8E0B] text-white py-2 rounded-lg hover:bg-[#db7e0d]"
-          >
-            Create Room
           </button>
-        </div>
-      </div>}
+
+          {/* Content */}
+          <div className="flex flex-col gap-4">
+            <h2 className="text-xl font-semibold text-center">Create a Room</h2>
+            <input
+              type="text"
+              value={roomName}
+              onChange={(e) => getRoomName(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+              placeholder="Enter a name for the room"
+            />
+            <input
+              type="text"
+              value={roomDesc}
+              onChange={(e) => getRoomDesc(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+              placeholder="Enter a description for the room"
+            />
+            <button
+              onClick={createRoom}
+              id="submit-btn"
+              className="w-full bg-[#FB8E0B] text-white py-2 rounded-lg hover:bg-[#db7e0d]"
+            >
+              Create Room
+            </button>
+          </div>
+        </div>}
 
 
         {/* contact */}
@@ -363,7 +381,7 @@ function Chat() {
               <div onClick={toggleAddRoom} className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4 items-center justify-center cursor-pointer">
                 <p className="text-lg font-semibold"><span> + </span>Add room</p>
               </div>
-              
+
             </div>
           </section>
         </section>
@@ -371,7 +389,7 @@ function Chat() {
 
 
         {/* chat message main */}
-        <section className="w-full container min-h-screen flex flex-col">
+        <section className="w-full container max-h-[600px] overflow-hidden flex flex-col">
           {/* nav bar */}
           <div className="flex max-h-12 w-full flex-row items-center justify-between px-4 py-8">
             <div onClick={() => navigate('/')} className="logo">
@@ -415,51 +433,57 @@ function Chat() {
                   </section>
                 </nav>
 
-                <section className="w-full max-h-[calc(100vh-200px)] p-4 md:pt-4 flex flex-col gap-4">
-                  {/* Messages Area */}
-                    {messageExist ?
-                    (<div className="flex w-full max-h-[400px] flex-col items-center justify-start gap-4 overflow-y-auto p-4 pb-24 md:pb-4 md:pt-4 ">
-
-                        {
-                          messageArray.map((text) => {
-                            if (text.uid === user.uid) {
-                              return <p className="max-w-[70%] self-end rounded-md bg-orange-300 px-4 py-4 text-sm leading-5">
-                                {text.content}
-                              </p>
-                            }
-                            else {
-                              return <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
-                                {text.content}
-                              </p>
-                            }
-                          })
+                <section className="w-full flex-1 h-screen overflow-hidden p-4 md:pt-4 flex flex-col gap-4">
+                  {messageExist ? (
+                    <div
+                      className="w-full flex flex-col items-center justify-start gap-4 overflow-y-auto p-4 pb-2 md:pb-4 md:pt-4 max-h-[calc(100vh-300px)]"
+                      style={{ maxHeight: "calc(100vh - 300px)", overflowY: "auto" }}
+                    >
+                      {messageArray.map((text) => {
+                        if (text.uid === user.uid) {
+                          return (
+                            <p
+                              className="max-w-[70%] self-end rounded-md bg-orange-300 px-4 py-4 text-sm leading-5 break-words"
+                            >
+                              {text.content}
+                            </p>
+                          );
+                        } else {
+                          return (
+                            <p
+                              className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5 break-words"
+                            >
+                              {text.content}
+                            </p>
+                          );
                         }
-
-
-                    </div>) : (
-                    <div className="flex w-full h-full items-center min-h-[400px]  justify-center text-gray-400">
+                      })}
+                    </div>
+                  ) : (
+                    <div className="flex w-full h-full items-center justify-center text-gray-400">
                       <p>No Message</p>
-                    </div>)}
+                    </div>
+                  )}
                 </section>
 
                 {/* Input Field */}
                 <div className="w-full fixed md:static left-0 bottom-0 flex items-center justify-evenly gap-4 bg-gray-200 p-4">
-                    <input value={message}
-                      onChange={(e) => getMessage(e.target.value)}
-                      className="flex-1 rounded-lg border p-2 bg-white focus:outline-none focus:ring focus:ring-orange-300"
-                      type="text"
-                      placeholder="Write a message"
-                    />
-                    <button  onClick={sendMessagetoFireStore} className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600">
-                      Send
-                    </button>
+                  <input value={message}
+                    onChange={(e) => getMessage(e.target.value)}
+                    className="flex-1 rounded-lg border p-2 bg-white focus:outline-none focus:ring focus:ring-orange-300"
+                    type="text"
+                    placeholder="Write a message"
+                  />
+                  <button onClick={sendMessagetoFireStore} className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600">
+                    Send
+                  </button>
                 </div>
               </div>) : (
-              <div className="w-full container  bg-slate-100 flex flex-col justify-center items-center text-gray-500">
+              <div className="w-full container flex-1   bg-slate-100 flex flex-col justify-center items-center text-gray-500">
                 <p className="text-xl font-semibold">No contacts or group chats yet</p>
                 <p className="text-md">Add friends or create a group chat to start chatting</p>
               </div>
-              )
+            )
           }
 
         </section>
