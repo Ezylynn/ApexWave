@@ -5,17 +5,32 @@ import { AuthContext } from "../Context/AuthProvider";
 
 import Footer from "../layout/Footer";
 import { RoomContext } from "../Context/RoomProvider";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, doc, collection, getDocs, setDoc, updateDoc, getDoc} from "firebase/firestore";
 import { addDocument } from "../firebase/services";
 import { db } from "../firebase/config";
+import { async } from "@firebase/util";
 
 function Chat() {
   const [addUser, toggleAddUser] = useState(false)
-  const [contactStatus, toggleContact] = useState(false)
-  const [allUsers, setAllUsers] = useState(null)
+  const [contactList, toggleContact] = useState(false)
+  // const [allUsers, setAllUsers] = useState(null)
+  const { user } = useContext(AuthContext);
+
+//room data
+  const [addRoomBox, addRoom] = useState(false)
   const [roomName, getRoomName] = useState(null)
   const [roomDesc, getRoomDesc] = useState(null)
-  const [clickRoomId, setClickRoomId] = useState(null);
+
+  // message data
+  const [message, getMessage] = useState(null)
+  
+  const [messageExist, setMessageExist] = useState(null)
+
+  const [messageArray, setMessageArray] = useState(null)
+
+  //set room id back to null later, true is set for testing purpose
+  const [roomID, setroomID] = useState(true);
+
   const [roomDetail, setRoomDetail] = useState(null)
 
   const navigate = useNavigate()
@@ -30,7 +45,7 @@ function Chat() {
     console.log("UID được chọn:", event.target.value);
   };
 
-
+  // listen to window size to adjust footer responsiveness
   useEffect(() => {
     window.addEventListener("resize", () => {
       setWidth(window.innerWidth);
@@ -45,20 +60,19 @@ function Chat() {
 
 
   function toggleBoxContact() {
-    toggleContact(!contactStatus)
-    console.log(contactStatus)
+    toggleContact(!contactList)
+    console.log(contactList)
 
   }
 
-  const { rooms, isAddRoomVisible, setIsAddRoomVisible, setSelectedRoomId } =
+
+  const { rooms, isAddRoomVisible, setIsAddRoomVisible, setSelectedroomID } =
     useContext(RoomContext);
-  const handleAddRoom = () => {
-    setIsAddRoomVisible(true);
-  };
-
-  const { user } = useContext(AuthContext);
-
-  const [addRoomBox, addRoom] = useState(false)
+  
+    
+  // const handleAddRoom = () => {
+  //   setIsAddRoomVisible(true);
+  // };
 
   function toggleAddRoom() {
     addRoom(!addRoomBox)
@@ -66,9 +80,79 @@ function Chat() {
 
 
   const getDetailRoom = (room) => {
-    setClickRoomId(room.id);
+    setroomID(room.id);
     setRoomDetail(room);
   }
+
+  const sendMessagetoFireStore = async () => {
+  
+    //catch error
+    if (!message) {
+      return;
+    }
+
+ 
+    try {
+      const roomRef = doc(db, 'rooms', roomID)
+      // console.log(roomRef)
+      const roomList = await getDoc(roomRef)
+      let time = new Date()
+      let newMessage = {
+          content: message,
+          displayName: user.displayName,
+          time: `${time.getHours()}:${time.getMinutes()}`,
+          uid: user.uid
+      }
+      const currentMessageList = roomList.exists() ? roomList.data().messageList || [] : []
+      // exists() firebase method, check if document exist or not, return true or false
+      // data() firebase method, gets document data as an obje t
+      // console.log(currentMessageList)
+      await updateDoc(
+        roomRef, {
+          messageList: [...currentMessageList, newMessage]
+        }
+      )
+    }
+
+    catch (error) {
+      console.log('Cannot upload data onto firebase', error)
+    }
+  }
+  
+
+
+  useEffect(() => {
+
+    function storeMessage(chatDatabase) {
+      setMessageArray(chatDatabase)
+      setMessageExist(true)
+      console.log(chatDatabase)
+    }
+    
+
+    async function fetchMessage(){
+      try {
+        const roomRef = doc(db, 'rooms', roomID)
+        const chatList = await getDoc(roomRef)
+        const chatDatabase = chatList.data().messageList
+        storeMessage(chatDatabase)
+  
+      }
+      catch (error) {
+        console.log('Unable to fetch data from firebase', error)
+      }
+    }
+
+
+    fetchMessage()
+  
+
+  }, [roomID,sendMessagetoFireStore]
+  )
+
+
+  //database
+
 
   /*
   Them phương thúc Add room, flow add room -> hiện modal -> nhập thông tin -> submit -> gọi hàm addDocument 
@@ -102,11 +186,11 @@ function Chat() {
       name: roomName,
       description: roomDesc,
       members: [user.uid],
+      messageList: []
     });
 
     getRoomName('');
     getRoomDesc('');
-    toggleAddUser(!addUser)
   }
 
 
@@ -122,11 +206,16 @@ function Chat() {
   // };
   // getUsers();
 
+
+
   return (
-    <div className="flex flex-col items-center">
+    <div className="w-full">
+
+      <main className="container relative mx-auto h-screen  md:shadow-xl md:flex md:justify-center">
+        {/* add user */}
 
       {addUser && <div
-        className="w-[400px] mt-60 absolute add-box bg-white shadow-2xl rounded-lg p-6 z-20"
+        className="w-[400px] mt-60 left-1/4 md:left-1/2 md:-translate-x-1/2 absolute bg-white shadow-2xl rounded-lg p-6 z-200 transition-all"
       >
         {/* Close Button */}
         <button onClick={() => toggleBoxAddUser()}
@@ -158,7 +247,7 @@ function Chat() {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
             placeholder="Enter username"
           />
-          <div class="custom-select">
+          {/* <div class="custom-select">
             <select onChange={handleAddUser}>
               {allUsers.map((user) => (
                 <option key={user.uid} value={user.uid}>
@@ -167,7 +256,7 @@ function Chat() {
               ))}
             </select>
 
-          </div>
+          </div> */}
 
           <button
             id="submit-btn"
@@ -180,7 +269,7 @@ function Chat() {
 
 
       {addRoomBox && <div
-        className="w-[400px] mt-60 absolute add-box bg-white shadow-2xl rounded-lg p-6 z-20"
+        className="w-[400px] mt-60 left-1/4 md:left-1/2 md:-translate-x-1/2 absolute bg-white shadow-2xl rounded-lg p-6 z-200 transition-all"
       >
         {/* Close Button */}
         <button onClick={toggleAddRoom}
@@ -203,8 +292,6 @@ function Chat() {
               d="M6 18 18 6M6 6l12 12"
             />
           </svg>
-
-
 
         </button>
 
@@ -236,21 +323,14 @@ function Chat() {
       </div>}
 
 
-
-
-
-      <main className="container mx-auto h-screen md:shadow-xl md:flex md:justify-center">
-        {/* add user */}
-
-
         {/* contact */}
-        {contactStatus && <section
+        {contactList && <section
           id="contact-list"
-          className="mx-auto absolute md:static bg-white h-screen w-full flex-col items-center shadow-md md:flex md:w-[30%]"
+          className="mx-auto absolute md:static bg-white  w-full flex-col items-center shadow-md md:flex md:w-[30%] z-100"
         >
-          <nav className="fixed md:static flex max-h-12 w-full flex-row items-center justify-between bg-[#FB8E0B] py-4 shadow-md z-50">
+          <nav className="fixed md:static flex max-h-12 w-full flex-row items-center justify-between bg-[#FB8E0B] py-4  shadow-md z-50">
             <p className="pl-4 text-center text-lg font-semibold text-white">
-              Contacts
+              Rooms
             </p>
             <svg onClick={() => toggleBoxContact()}
               id="x-button"
@@ -269,8 +349,8 @@ function Chat() {
               />
             </svg>
           </nav>
-          <section className="flex w-full justify-center">
-            <div className="flex w-[90%] flex-col gap-6 overflow-y-auto py-6 max-h-[90vh]">
+          <section className="flex flex-col w-full justify-start items-center h-screen">
+            <div className="flex w-[90%] flex-col gap-6 overflow-y-auto h-full mt-40 md:mt-0 pt-4">
 
               {rooms.map((room, key) => (
                 <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4" key={key} onClick={() => { getDetailRoom(room) }}>
@@ -283,6 +363,7 @@ function Chat() {
               <div onClick={toggleAddRoom} className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4 items-center justify-center cursor-pointer">
                 <p className="text-lg font-semibold"><span> + </span>Add room</p>
               </div>
+              
             </div>
           </section>
         </section>
@@ -290,7 +371,7 @@ function Chat() {
 
 
         {/* chat message main */}
-        <section id="chat-box" className="w-full md:block">
+        <section className="w-full container min-h-screen flex flex-col">
           {/* nav bar */}
           <div className="flex max-h-12 w-full flex-row items-center justify-between px-4 py-8">
             <div onClick={() => navigate('/')} className="logo">
@@ -317,12 +398,12 @@ function Chat() {
 
             </div>
           </div>
-          {
-            clickRoomId ? (
-              <div>
-                <nav className="container fixed flex w-full flex-col items-center bg-white md:static">
 
-                  <section className="item-center mx-auto flex w-full flex-row justify-between bg-[#FB8E0B] px-6 py-4">
+          {
+            roomID ? (
+              <div className="w-full flex flex-col flex-1 overflow-hidden ">
+                <nav className="container sticky flex w-full flex-row justify-center items-center bg-white md:static">
+                  <section className="item-center mx-auto flex w-full flex-row items-center justify-between bg-[#FB8E0B] px-6 py-4">
                     <p className="font-semibold text-white">
                       Room {roomDetail ? roomDetail.name : "undefined"}
                     </p>
@@ -333,33 +414,52 @@ function Chat() {
                     />
                   </section>
                 </nav>
-                <section className="flex w-full flex-col md:h-4/5">
+
+                <section className="w-full max-h-[calc(100vh-200px)] p-4 md:pt-4 flex flex-col gap-4">
                   {/* Messages Area */}
-                  <div className="flex w-full flex-1 flex-col items-center justify-start gap-4 overflow-y-auto p-4 pb-24 pt-36 md:pb-4 md:pt-4">
-                    <p className="max-w-[70%] self-end rounded-md bg-orange-300 px-4 py-4 text-sm leading-5">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    </p>
+                    {messageExist ?
+                    (<div className="flex w-full max-h-[400px] flex-col items-center justify-start gap-4 overflow-y-auto p-4 pb-24 md:pb-4 md:pt-4 ">
 
-                    <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum
-                      nostrum explicabo, eius aspernatur nesciunt eveniet facere alias
-                      quod consectetur dicta, neque inventore porro adipisci!
-                    </p>
+                        {
+                          messageArray.map((text) => {
+                            if (text.uid === user.uid) {
+                              return <p className="max-w-[70%] self-end rounded-md bg-orange-300 px-4 py-4 text-sm leading-5">
+                                {text.content}
+                              </p>
+                            }
+                            else {
+                              return <p className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5">
+                                {text.content}
+                              </p>
+                            }
+                          })
+                        }
 
-                  </div>
-                  {/* Input Field */}
-                  <div className="container fixed bottom-0 mx-auto flex w-full items-center gap-4 bg-gray-200 p-4 md:static">
-                    <input
+
+                    </div>) : (
+                    <div className="flex w-full h-full items-center min-h-[400px]  justify-center text-gray-400">
+                      <p>No Message</p>
+                    </div>)}
+                </section>
+
+                {/* Input Field */}
+                <div className="w-full fixed md:static left-0 bottom-0 flex items-center justify-evenly gap-4 bg-gray-200 p-4">
+                    <input value={message}
+                      onChange={(e) => getMessage(e.target.value)}
                       className="flex-1 rounded-lg border p-2 bg-white focus:outline-none focus:ring focus:ring-orange-300"
                       type="text"
                       placeholder="Write a message"
                     />
-                    <button className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600">
+                    <button  onClick={sendMessagetoFireStore} className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600">
                       Send
                     </button>
-                  </div>
-                </section>
-              </div>) : ("undefined")
+                </div>
+              </div>) : (
+              <div className="w-full container  bg-slate-100 flex flex-col justify-center items-center text-gray-500">
+                <p className="text-xl font-semibold">No contacts or group chats yet</p>
+                <p className="text-md">Add friends or create a group chat to start chatting</p>
+              </div>
+              )
           }
 
         </section>

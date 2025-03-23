@@ -5,6 +5,7 @@ import { auth, db } from "../firebase/config";
 import { getDoc, doc } from "firebase/firestore";
 
 export const AuthContext = createContext();
+//create context, de dung state globally cho cac compojnen
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
