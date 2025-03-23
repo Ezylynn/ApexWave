@@ -465,7 +465,7 @@ function Chat() {
         </section>
       </main>
 
-      {width < 768 ? <React.Fragment></React.Fragment> : <Footer />}
+      {/* {width < 768 ? <React.Fragment></React.Fragment> : <Footer />} */}
     </div>
   );
 }
