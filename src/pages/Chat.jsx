@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthProvider";
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
+
 
 
 import Footer from "../layout/Footer";
@@ -11,16 +13,20 @@ import { db } from "../firebase/config";
 import { async } from "@firebase/util";
 
 function Chat() {
-  const [addUser, toggleAddUser] = useState(false)
+
+  const [addUser, toggleAddUser] = useState('')
   const [contactList, toggleContact] = useState(false)
-  // const [allUsers, setAllUsers] = useState(null)
+  const [allUsers, setAllUsers] = useState([])
+  const [userSearch, setUserSearch] = useState('')
   const { user } = useContext(AuthContext);
+
+
 
   //room data
   const [addRoomBox, addRoom] = useState(false)
   const [roomName, getRoomName] = useState(null)
   const [roomDesc, getRoomDesc] = useState(null)
-  const [userAvailable, setUserAvailable] = useState(null)
+  // const [userAvailable, setUserAvailable] = useState(null)
   // message data
   const [message, getMessage] = useState(null)
 
@@ -29,7 +35,7 @@ function Chat() {
   const [messageArray, setMessageArray] = useState(null)
 
   //set room id back to null later, true is set for testing purpose
-  const [roomID, setroomID] = useState(true);
+  const [roomID, setroomID] = useState(null);
 
   const [roomDetail, setRoomDetail] = useState(null)
 
@@ -38,12 +44,27 @@ function Chat() {
   const [width, setWidth] = useState(window.innerWidth); //2560
   // console.log(window.innerWidth)
 
-  const [selectedUid, setSelectedUid] = useState("");
+  const [selectedUid, setSelectedUid] = useState([]);
 
-  const handleAddUser = (event) => {
-    setSelectedUid(event.target.value);
-    console.log("UID được chọn:", event.target.value);
-  };
+
+const handleAddUser = (user) => {
+  setSelectedUid((prevSelected) => {
+    // Check if user is already selected
+    const alreadySelected = prevSelected.includes(user);
+
+    if (alreadySelected) {
+      // Remove user
+      // console.log( prevSelected.filter((uid) => uid !== user))
+      return prevSelected.filter((uid) => uid !== user);
+    } else {
+      // Add user
+      // console.log([...prevSelected, user])
+      return [...prevSelected, user];
+   
+    }
+  });
+
+};
 
   // listen to window size to adjust footer responsiveness
   useEffect(() => {
@@ -56,7 +77,6 @@ function Chat() {
 
   function toggleBoxContact() {
     toggleContact(!contactList)
-    console.log(contactList)
 
   }
 
@@ -89,24 +109,30 @@ function Chat() {
 
     try {
       const roomRef = doc(db, 'rooms', roomID)
-      // console.log(roomRef)
+      // clear message input box
+      getMessage('')
+
       const roomList = await getDoc(roomRef)
       let time = new Date()
       let newMessage = {
         content: message,
         displayName: user.displayName,
-        time: `${time.getHours()}:${time.getMinutes()}`,
+        time:  `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`,
         uid: user.uid
       }
+
+
+
       const currentMessageList = roomList.exists() ? roomList.data().messageList || [] : []
       // exists() firebase method, check if document exist or not, return true or false
-      // data() firebase method, gets document data as an obje t
+      // data() firebase method, gets document data as an object
       // console.log(currentMessageList)
       await updateDoc(
         roomRef, {
         messageList: [...currentMessageList, newMessage]
       }
       )
+
     }
 
     catch (error) {
@@ -121,7 +147,6 @@ function Chat() {
     function storeMessage(chatDatabase) {
       setMessageArray(chatDatabase)
       setMessageExist(true)
-      console.log(chatDatabase)
     }
 
 
@@ -134,7 +159,7 @@ function Chat() {
 
       }
       catch (error) {
-        console.log('Unable to fetch data from firebase', error)
+        // console.log('Unable to fetch data from firebase', error)
       }
     }
 
@@ -150,79 +175,102 @@ function Chat() {
   //ddaya la mot doi tuong tra ve khi ma truy van getDocs
   //querysnapshot se tra ve danh sach tat ca cac tai lieu document
 
-  const fetchUser = async () => {
+
+  const getUsers = async () => {
     try {
+
+      const roomRef = doc(db, 'rooms', roomID)
+      const room = await getDoc(roomRef)
+
+      const userList = room.data().members
+
       const querySnapshot = await getDocs(collection(db, "users"));
-      console.log(querySnapshot) //querysnapshot la 1 object
-      const getAllUserDocs = querySnapshot.docs.map((doc) => doc.data());
-      setUserAvailable(getAllUserDocs);
-      console.log(getAllUserDocs);
+      const document = querySnapshot.docs.map((doc) => doc.data());
+      // console.log(document)
+
+      // filter function that removes user that has already been added to the room
+      const sortedDocument = document.filter((user)=> !userList.includes(user.uid))
+      setAllUsers(sortedDocument);
+      
     } catch (error) {
-      console.log(error)
+      console.error("Lỗi khi lấy dữ liệu:", error);
     }
-  }
+  };
 
 
   function toggleBoxAddUser() {
     toggleAddUser(!addUser)
-    fetchUser();
-
-
+    getUsers();
   }
 
 
-  /*
-  Them phương thúc Add room, flow add room -> hiện modal -> nhập thông tin -> submit -> gọi hàm addDocument 
-  (hãy nhớ là mình sẽ cho bản thân mình vào trong room đó luôn)
-  cấu trúc của rooms
-  rooms: [
-    {
-      id: 1,
-      name: "Room 1",
-      description: "Description 1",
-      members: ["uid"],
-      messages: [
-        {
-          id: 1, //Day la id cua message
-          content: "Hello", //noi dung 
-          sender: "uid", // Nguoi gui la ai
-          createdAt: "timestamp", //thoi gian gui
-        },
+  const addUserToRoom = async () => {
     
-    ]
-        mình đã tạo 1 room rồi, giờ mình sẽ thêm message vào room đó
-    tức là ở đây mình sẽ cập nhật lại room đó, thêm message vào room đó
-        */
 
+
+    try {
+      const roomRef = doc(db, 'rooms', roomID)
+      const roomList = await getDoc(roomRef)
+      const currentMemberList = roomList.exists() ? roomList.data().members || [] : []
+      // exists() firebase method, check if document exist or not, return true or false
+      // data() firebase method, gets document data as an object
+      if (selectedUid.length == 0) {
+        throw error
+      } 
+
+      else {
+         let userList = currentMemberList.concat(selectedUid)
+
+          await updateDoc(
+            roomRef, {
+            members: userList
+            }
+          )
+          alert('User has been added ')
+          setSelectedUid([])
+          getUsers()
+      }
+      
+    
+    }
+
+    catch (error) {
+      alert('No user has been selected')
+      console.log('Cannot upload data onto firebase', error)
+    }
+ }
 
 
   function createRoom() {
-    // console.log(roomName)
-    // console.log(roomDesc)
-    addDocument("rooms", {
-      name: roomName,
-      description: roomDesc,
-      members: [user.uid],
-      messageList: []
-    });
 
-    getRoomName('');
-    getRoomDesc('');
+    try {
+
+      if (roomName == '' || roomDesc == ''|| roomName == null  || roomDesc == null  ) {
+        throw error
+      }
+
+      else {
+        addDocument("rooms", {
+        name: roomName,
+        description: roomDesc,
+        members: [user.uid],
+        messageList: []
+        });
+      alert('Room has been created')
+      getRoomName('');
+      getRoomDesc('');
+      }
+
+
+      
+    }
+
+    catch (error) {
+      alert('Enter your room name or room description')
+      console.log("Can't create room")
+    }
+    
   }
-
-
-  // const getUsers = async () => {
-  //   try {
-  //     const querySnapshot = await getDocs(collection(db, "users"));
-  //     const document = querySnapshot.docs.map((doc) => doc.data());
-  //     console.log(document);
-  //     setAllUsers(document);
-  //   } catch (error) {
-  //     console.error("Lỗi khi lấy dữ liệu:", error);
-  //   }
-  // };
-  // getUsers();
-
 
 
   return (
@@ -232,14 +280,15 @@ function Chat() {
         {/* add user */}
 
         {addUser && <div
-          className="w-[400px] mt-60 left-1/4 md:left-1/2 md:-translate-x-1/2 absolute bg-white shadow-2xl rounded-lg p-6 z-200 transition-all"
+          className="w-[400px] h-[500px] mt-40 left-1/4 md:left-1/2 md:-translate-x-1/2 absolute bg-white shadow-2xl rounded-lg p-6 z-200 transition-all  "
         >
           {/* Close Button */}
           <button onClick={() => toggleBoxAddUser()}
             id="close-btn"
             className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
           >
-            <svg
+            <div>
+                          <svg
               className="size-10 pr-4"
               aria-colspan
               xmlns="http://www.w3.org/2000/svg"
@@ -254,35 +303,65 @@ function Chat() {
                 d="M6 18 18 6M6 6l12 12"
               />
             </svg>
-          </button>
-          {/* Content */}
-          <div className="flex flex-col gap-4">
-            <h2 className="text-xl font-semibold text-center">Add a User</h2>
-            <input
-              type="text"
-              id="username-input"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
-              placeholder="Enter username"
-            />
-            <div class="custom-select">
-              <select onChange={handleAddUser}>
-                {userAvailable?.map((user) => (
-                  <option key={user.uid} value={user.uid}>
-                    {user.displayName}
-                  </option>
-                ))}
-              </select>
-
 
             </div>
 
+          </button>
+          {/* Content */}
+          <div className="flex flex-col gap-4 items-center">
+            <h2 className="text-xl font-semibold text-center">Add a User</h2>
+            <div className="flex items-center justify-center gap-4">
+              <input
+              onChange={(e) => setUserSearch(e.target.value.toLowerCase())}
+              value ={userSearch || ''}
+              type="text"
+              id="username-input"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+              placeholder="Search username or UID"
+              />
+
+            </div>
+            <div className="w-full flex flex-col items-center justify-start gap-4 h-[300px] overflow-y-scroll py-4 ">
+              {/* filter function, if user search is blank then return all user to be map, 
+              if not then check username or uid is included  user search*/}
+            {
+              allUsers.length === 0 ? (
+                <p className="font-lg font-light">Loading...</p>
+              ) : (
+                allUsers
+                  .filter((user) => {
+                    return userSearch === ''
+                      ? true
+                      : user.displayName.toLowerCase().includes(userSearch.toLowerCase()) ||
+                        user.uid.toString().includes(userSearch);
+                  })
+                  .map((user) => (
+                    <div
+                      key={user.uid}
+                      onClick={(e) => handleAddUser(e.currentTarget.dataset.value)}
+                      data-value={user.uid}
+               
+                      className={`max-w-5/6 flex flex-col items-start justify-center gap-2 py-4 px-4 rounded-sm ${selectedUid.includes(user.uid) ? "hover:bg-[#fb8f0bef] bg-[#FB8E0B]" : "hover:bg-gray-300 bg-gray-200 " }  hover:cursor-pointer`}
+                    >
+                      <p className="font-medium text-lg ">{user.displayName}</p>
+                      <p className="font-light text-sm">UID:{user.uid}</p>
+                    </div>
+                  ))
+              )
+            }
+
+            </div>
+
+
             <button
+              onClick={addUserToRoom}
               id="submit-btn"
               className="w-full bg-[#FB8E0B] text-white py-2 rounded-lg hover:bg-[#db7e0d]"
             >
               Add User
             </button>
           </div>
+
         </div>}
 
 
@@ -318,14 +397,14 @@ function Chat() {
             <h2 className="text-xl font-semibold text-center">Create a Room</h2>
             <input
               type="text"
-              value={roomName}
+              value={roomName || ''}
               onChange={(e) => getRoomName(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
               placeholder="Enter a name for the room"
             />
             <input
               type="text"
-              value={roomDesc}
+              value={roomDesc || ''}
               onChange={(e) => getRoomDesc(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#FB8E0B]"
               placeholder="Enter a description for the room"
@@ -333,7 +412,7 @@ function Chat() {
             <button
               onClick={createRoom}
               id="submit-btn"
-              className="w-full bg-[#FB8E0B] text-white py-2 rounded-lg hover:bg-[#db7e0d]"
+              className="w-full bg-[#FB8E0B] text-white py-2 rounded-lg hover:bg-[#db7e0d] hover:cursor-pointer"
             >
               Create Room
             </button>
@@ -370,15 +449,18 @@ function Chat() {
           <section className="flex flex-col w-full justify-start items-center h-screen">
             <div className="flex w-[90%] flex-col gap-6 overflow-y-auto h-full mt-40 md:mt-0 pt-4">
 
-              {rooms.map((room, key) => (
-                <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4" key={key} onClick={() => { getDetailRoom(room) }}>
+
+              
+              { rooms && 
+                rooms.map((room, key) => (
+                <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4 hover:cursor-pointer" key={key} onClick={() => { getDetailRoom(room) }}>
                   <p className="text-lg font-semibold">{room.name}</p>
                   <p className="line-clamp-1 text-sm font-light">
                     {room.description}
                   </p>
                 </div>
               ))}
-              <div onClick={toggleAddRoom} className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4 items-center justify-center cursor-pointer">
+              <div onClick={toggleAddRoom} className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4 items-center justify-center hover:cursor-pointer">
                 <p className="text-lg font-semibold"><span> + </span>Add room</p>
               </div>
 
@@ -394,7 +476,7 @@ function Chat() {
           <div className="flex max-h-12 w-full flex-row items-center justify-between px-4 py-8">
             <div onClick={() => navigate('/')} className="logo">
               <svg
-                className="size-16"
+                className="size-16 hover:cursor-pointer"
                 viewBox="0 0 95 38"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -411,8 +493,8 @@ function Chat() {
                 />
               </svg>
             </div>
-            <div className="flex flex-row items-center justify-center gap-6">
-              <p onClick={() => toggleBoxContact()} id="contact">Contact</p>
+            <div className="flex flex-row items-center justify-center gap-6 hover:cursor-pointer">
+              <p onClick={() => toggleBoxContact()} id="contact">Rooms</p>
 
             </div>
           </div>
@@ -425,10 +507,10 @@ function Chat() {
                     <p className="font-semibold text-white">
                       Room {roomDetail ? roomDetail.name : "undefined"}
                     </p>
-                    {/* //Tu theem description */}
+  
                     <i onClick={() => toggleBoxAddUser()}
                       id="add-button"
-                      className="bx bx-message-square-add text-2xl text-white"
+                      className="bx bx-message-square-add text-2xl text-white hover:cursor-pointer"
                     />
                   </section>
                 </nav>
@@ -439,22 +521,28 @@ function Chat() {
                       className="w-full flex flex-col items-center justify-start gap-4 overflow-y-auto p-4 pb-2 md:pb-4 md:pt-4 max-h-[calc(100vh-300px)]"
                       style={{ maxHeight: "calc(100vh - 300px)", overflowY: "auto" }}
                     >
-                      {messageArray.map((text) => {
+
+                      {messageArray &&
+                        messageArray.map((text, key) => {
                         if (text.uid === user.uid) {
                           return (
-                            <p
-                              className="max-w-[70%] self-end rounded-md bg-orange-300 px-4 py-4 text-sm leading-5 break-words"
-                            >
-                              {text.content}
-                            </p>
+                            <div key={key} className="max-w-[70%] self-end bg-orange-300 rounded-md px-4 py-2 text-sm flex flex-col gap-1 break-words">
+                              <div className="flex justify-between items-center text-xs text-gray-700 font-semibold min-w-[150px]">
+                                <span className="pr-4">{text.displayName}</span>
+                                <span className="text-right">{text.time}</span>
+                              </div>
+                              <p className="text-black">{text.content}</p>
+                            </div>
                           );
                         } else {
                           return (
-                            <p
-                              className="max-w-[70%] self-start rounded-md bg-blue-300 px-4 py-4 text-sm leading-5 break-words"
-                            >
-                              {text.content}
-                            </p>
+                            <div key={key}  className="max-w-[70%] self-start bg-blue-300 rounded-md px-4 py-2 text-sm flex flex-col gap-1 break-words">
+                              <div className="flex justify-between items-center text-xs text-gray-700 font-semibold min-w-[150px]">
+                                <span className="pr-4">{text.displayName}</span>
+                                <span className="text-right">{text.time}</span>
+                              </div>
+                              <p className="text-black">{text.content}</p>
+                            </div>
                           );
                         }
                       })}
@@ -468,7 +556,7 @@ function Chat() {
 
                 {/* Input Field */}
                 <div className="w-full fixed md:static left-0 bottom-0 flex items-center justify-evenly gap-4 bg-gray-200 p-4">
-                  <input value={message}
+                  <input value={message || ''}
                     onChange={(e) => getMessage(e.target.value)}
                     className="flex-1 rounded-lg border p-2 bg-white focus:outline-none focus:ring focus:ring-orange-300"
                     type="text"
@@ -480,8 +568,8 @@ function Chat() {
                 </div>
               </div>) : (
               <div className="w-full container flex-1   bg-slate-100 flex flex-col justify-center items-center text-gray-500">
-                <p className="text-xl font-semibold">No contacts or group chats yet</p>
-                <p className="text-md">Add friends or create a group chat to start chatting</p>
+                <p className="text-xl font-semibold">No group chat selected yet</p>
+                <p className="text-md">Create a group chat and add friends to start chatting</p>
               </div>
             )
           }
@@ -489,7 +577,7 @@ function Chat() {
         </section>
       </main>
 
-      {/* {width < 768 ? <React.Fragment></React.Fragment> : <Footer />} */}
+      {width < 768 ? <React.Fragment></React.Fragment> : <Footer />}
     </div>
   );
 }

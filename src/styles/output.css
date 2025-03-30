@@ -2132,8 +2132,64 @@ img, video {
 .h-screen {
   height: 100vh;
 }
-.h-\[100px\] {
-  height: 100px;
+
+.h-\[300px\] {
+  height: 300px;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
+}
+
+.max-w-full {
+  max-width: 100%;
+}
+
+.hover\:cursor-pointer {
+  &:hover {
+    @media (hover: hover) {
+      cursor: pointer;
+    }
+  }
+}
+
+.max-w-5\/6 {
+  max-width: calc(5/6 * 100%);
+}
+
+.hover\:bg-gray-300 {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-gray-300)
+        /* oklch(0.872 0.01 258.338) = #d1d5dc */
+      ;
+    }
+  }
+}
+
+
+.bg-gray-300 {
+  background-color: var(--color-gray-300)
+    /* oklch(0.872 0.01 258.338) = #d1d5dc */
+  ;
+}
+
+.rounded-lg {
+  border-radius: var(--radius-lg)
+    /* 0.5rem = 8px */
+  ;
+}
+
+.hover\:border-\[\#FB8E0B\] {
+  &:hover {
+    @media (hover: hover) {
+      border-color: #FB8E0B;
+    }
+  }
+}
+
+.h-\[500px\] {
+  height: 500px;
 }
 .max-h-12 {
   max-height: 3rem;

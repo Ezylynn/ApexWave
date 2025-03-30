@@ -22,10 +22,15 @@ export const useFireStore = (collectionName, condition) => {
     }
 
     const unsub = onSnapshot(queryCollection, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
+    
+      let data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
+
+      if (data == null || data == undefined) {
+        return
+      }
 
       setDocuments(data);
     });
