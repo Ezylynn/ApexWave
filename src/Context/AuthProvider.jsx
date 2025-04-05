@@ -67,8 +67,6 @@ export default function AuthProvider({ children }) {
         }
       }
     });
-
-    console.log(user)
     return () => unsubscribe();
     
   }, [navigate]);

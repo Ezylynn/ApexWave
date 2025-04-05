@@ -8,18 +8,23 @@ import {
   signInWithPopup
 } from "../firebase/config";
 import { createUserWithEmailAndPassword, getAdditionalUserInfo } from "firebase/auth";
-
-import { doc, setDoc, addDoc } from "firebase/firestore";
+import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
+import { doc, setDoc, addDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import Footer from "../layout/Footer";
+
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [displayName, setDisplayName] = useState(""); // Thêm tên hiển thị
   const [error, setError] = useState("");
+
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // 🔹 Handle Email/Password Sign-Up
   const handleSignUp = async (e) => {
@@ -40,7 +45,7 @@ const SignUp = () => {
                           `${dateObj.getFullYear()}`;
 
       // Lưu vào Firestore
-      const userRef = await setDoc(doc(db, "users", user.uid), {
+      await setDoc(doc(db, "users", user.uid), {
         displayName: displayName || "",
         email: user.email,
         uid: user.uid,
@@ -69,23 +74,49 @@ const SignUp = () => {
   // 🔹 Handle Google Sign-Up
   const handleGoogleSignUp = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      const additionalUserInfo = result.additionalUserInfo;
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+    const additionalUserInfo = result.additionalUserInfo;
 
-      
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
 
-      // Lưu vào Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        displayName: user.displayName || "",
-        email: user.email,
-        photoURL: user.photoURL || "",
-        uid: user.uid,
-        providerId: additionalUserInfo?.providerId || "google",
-      });
+        if (userSnap.exists()) {
+          // ✅ User already exists, don't overwrite
+          navigate("/");
 
-      navigate("/");
-    } catch (err) {
+        } else {
+          // 🗓️ Create formatted creation date
+          const dateObj = new Date();
+          const creationDate = `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/` +
+            `${dateObj.getDate().toString().padStart(2, '0')}/` +
+            `${dateObj.getFullYear()}`;
+
+          // 🔹 Save to "users" collection
+          await setDoc(userRef, {
+            displayName: user.displayName || "",
+            email: user.email,
+            photoURL: user.photoURL || "",
+            uid: user.uid,
+            providerId: additionalUserInfo?.providerId || "google",
+            dateCreated: creationDate,
+          });
+
+          // 🔹 Save to "users_Profile" collection
+          await setDoc(doc(db, "users_Profile", user.uid), {
+            displayName: user.displayName || "",
+            photoURL: user.photoURL || "",
+            userId: user.uid,
+            dateCreated: creationDate,
+            dob: "",
+            age: "",
+            address: "",
+          });
+
+          navigate("/");
+        }}
+
+    catch(err) {
       setError(err.message);
     }
   };
@@ -93,20 +124,47 @@ const SignUp = () => {
   // 🔹 Handle Facebook Sign-Up
   const handleFacebookSignUp = async () => {
     try {
-      const result = await signInWithPopup(auth, facebookProvider);
+           const result = await signInWithPopup(auth, facebookProvider);
       const user = result.user;
       const additionalUserInfo = result.additionalUserInfo;
 
-      // Lưu vào Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        displayName: user.displayName || "",
-        email: user.email,
-        photoURL: user.photoURL || "",
-        uid: user.uid,
-        providerId: additionalUserInfo?.providerId || "facebook",
-      });
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
 
-      navigate("/");
+      if (userSnap.exists()) {
+        // ✅ User already exists
+        navigate("/");
+        
+      } else {
+        // 🗓️ Format creation date
+        const dateObj = new Date();
+        const creationDate = `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/` +
+                            `${dateObj.getDate().toString().padStart(2, '0')}/` +
+                            `${dateObj.getFullYear()}`;
+
+        // 🔹 Create document in "users"
+        await setDoc(userRef, {
+          displayName: user.displayName || "",
+          email: user.email,
+          photoURL: user.photoURL || "",
+          uid: user.uid,
+          providerId: additionalUserInfo?.providerId || "facebook",
+          dateCreated: creationDate,
+        });
+
+        // 🔹 Create document in "users_Profile"
+        await setDoc(doc(db, "users_Profile", user.uid), {
+          displayName: user.displayName || "",
+          photoURL: user.photoURL || "",
+          userId: user.uid,
+          dateCreated: creationDate,
+          dob: "",
+          age: "",
+          address: "",
+        });
+
+        navigate("/");
+      }
     } catch (err) {
       setError(err.message);
     }
@@ -143,22 +201,51 @@ const SignUp = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                <input
-                  className="w-full rounded-lg border px-4 py-2  border border-gray-300 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
-                  type="password"
-                  placeholder="Create a Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <input
-                  className="w-full rounded-lg border px-4 py-2  border border-gray-300 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
-                  type="password"
-                  placeholder="Confirm Password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
+
+                  {/* Password Field */}
+                  <div className="relative w-full">
+                    <input
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Create a Password"
+                      name="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-3 flex items-center text-gray-400"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeIcon className="size-6" /> : <EyeSlashIcon className="size-6" />}
+                    </button>
+                </div>
+                
+
+                
+                  {/* Confirm Password Field */}
+                  <div className="relative w-full">
+                    <input
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Confirm Password"
+                      name="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-3 flex items-center text-gray-400"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? <EyeIcon className="size-6" /> : <EyeSlashIcon className="size-6" />}
+                    </button>
+                  </div>
+
+            
+              
+
                 <button className="w-full rounded-sm bg-[#FB8E0B] py-2 text-white" type="submit">
                   Sign Up
                 </button>

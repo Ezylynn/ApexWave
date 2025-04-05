@@ -32,19 +32,25 @@ function Contact() {
             </header>
 
             <section className="w-full">
-              <form className="flex flex-col items-center gap-4">
+              <form action={"https://formspree.io/f/mldjpkaz"} method={'POST'}  className="flex flex-col items-center gap-4">
                 <input
                   className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+                  required
                   type="text"
+                  name="user name"
                   placeholder="Name"
                 />
                 <input
                   className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+                  required
                   type="email"
+                  name="user email"
                   placeholder="Email"
                 />
                 <textarea
                   className="w-full rounded-lg border resize-none  border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+                  required
+                  name="user message"
                   placeholder="Write your message"
                   id=""
                   cols="30"

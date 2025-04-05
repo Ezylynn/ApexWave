@@ -144,21 +144,28 @@ const Profile = () => {
                     await updateDoc(userRef, {
                         displayName: formData.fullName
                     })
+                  
+                    await updateDoc(userDisplayRef, {
+                        displayName: formData.fullName
+                    })
                 }
                 
 
-                if (!isNaN(Number(formData.age)) && formData.age.trim() !== "") {
-                    setEditMode(false)
-                    await updateDoc(userDisplayRef,
-                    {
-                    age: formData.age,
-                        })
-                    
-                }
-                else {
-                    cancelChange()
-                    alert('Invalid format. Please enter your age as a number')
-                }
+              if (formData.age.trim() === "") {
+                console.log('No change to age')
+                 setEditMode(false)
+              } else if (
+                formData.age !== currentUser.age &&                  // has changed
+                !isNaN(formData.age) &&                              // is a number
+                /^\d+$/.test(formData.age.trim())                    // only digits
+              ) {
+                setEditMode(false);
+                console.log("Age changed and valid, updating...");
+                await updateDoc(userDisplayRef, { age: formData.age });
+              } else {
+                cancelChange();
+                alert(" Invalid format. Please enter your age as a number");
+              }
 
             
                 if (formData.address !== currentUser.address) {

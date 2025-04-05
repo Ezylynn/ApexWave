@@ -3,11 +3,6 @@ import Footer from "../layout/Footer";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {
-  EyeIcon,
-  EyeSlashIcon,
-} from "@heroicons/react/24/solid";
-
-import {
   auth,
   googleProvider,
   facebookProvider,
@@ -15,12 +10,25 @@ import {
   signInWithPopup,
 } from "../firebase/config";
 
+import { doc, setDoc, addDoc, getDoc} from "firebase/firestore";
+import { db } from "../firebase/config";
+
+
+import {
+  EyeIcon,
+  EyeSlashIcon,
+} from "@heroicons/react/24/solid";
 
 
 
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+
+
+  const [displayName, setDisplayName] = useState(""); // Thêm tên hiển thị
   const [error, setError] = useState("");
 
   const navigate = useNavigate()
@@ -41,21 +49,97 @@ function SignIn() {
     }
   };
 
-  // 🔹 Handle Google Sign-In
   const handleGoogleLogin = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      navigate('/')
-    } catch (err) {
-      setError(err.message);
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+    const additionalUserInfo = result.additionalUserInfo;
+
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      // ✅ User already exists, don't overwrite
+      navigate("/");
+
+    } else {
+      // 🗓️ Create formatted creation date
+      const dateObj = new Date();
+      const creationDate = `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/` +
+                           `${dateObj.getDate().toString().padStart(2, '0')}/` +
+                           `${dateObj.getFullYear()}`;
+
+      // 🔹 Save to "users" collection
+      await setDoc(userRef, {
+        displayName: user.displayName || "",
+        email: user.email,
+        photoURL: user.photoURL || "",
+        uid: user.uid,
+        providerId: additionalUserInfo?.providerId || "google",
+        dateCreated: creationDate,
+      });
+
+      // 🔹 Save to "users_Profile" collection
+      await setDoc(doc(db, "users_Profile", user.uid), {
+        displayName: user.displayName || "",
+        photoURL: user.photoURL || "",
+        userId: user.uid,
+        dateCreated: creationDate,
+        dob: "",
+        age: "",
+        address: "",
+      });
+
+      navigate("/");
     }
-  };
+  } catch (err) {
+    setError(err.message);
+  }
+};
   
   const handleFacebookLogin = async () => {
     try {
-      await signInWithPopup(auth, facebookProvider);
-      navigate("/"); 
+      const result = await signInWithPopup(auth, facebookProvider);
+      const user = result.user;
+      const additionalUserInfo = result.additionalUserInfo;
 
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        // ✅ User already exists
+        navigate("/");
+
+      } else {
+        // 🗓️ Format creation date
+        const dateObj = new Date();
+        const creationDate = `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/` +
+                            `${dateObj.getDate().toString().padStart(2, '0')}/` +
+                            `${dateObj.getFullYear()}`;
+
+        // 🔹 Create document in "users"
+        await setDoc(userRef, {
+          displayName: user.displayName || "",
+          email: user.email,
+          photoURL: user.photoURL || "",
+          uid: user.uid,
+          providerId: additionalUserInfo?.providerId || "facebook",
+          dateCreated: creationDate,
+        });
+
+        // 🔹 Create document in "users_Profile"
+        await setDoc(doc(db, "users_Profile", user.uid), {
+          displayName: user.displayName || "",
+          photoURL: user.photoURL || "",
+          userId: user.uid,
+          dateCreated: creationDate,
+          dob: "",
+          age: "",
+          address: "",
+        });
+
+        navigate("/");
+      }
     } catch (err) {
       setError(err.message);
     }
@@ -83,16 +167,27 @@ function SignIn() {
 
               onChange={(e) => setEmail(e.target.value)}
             />
-            <input
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
-              type="password"
-              placeholder="Enter Your Password"
-              value={password}
-              autoComplete="new-password"
 
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            {/* Password Field */}
+                  <div className="relative w-full">
+                    <input
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter Your Password"
+                      value={password}
+                      autoComplete="new-password"
 
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-3 flex items-center text-gray-400"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeIcon className="size-6" /> : <EyeSlashIcon className="size-6" />}
+                    </button>
+            </div>
+          
             <button className="w-full bg-[#FB8E0B] text-white py-2 rounded-sm hover:bg-[#db7e0d]" type="submit">
               Log In
             </button>
