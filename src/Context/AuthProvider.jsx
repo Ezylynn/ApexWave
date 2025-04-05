@@ -17,6 +17,7 @@ export default function AuthProvider({ children }) {
         try {
           let { displayName, email, uid, photoURL } = user;
 
+
           //Vi sao phai thêm displayName
           /*
           Khi anh đăng kí bằng email and Passsword thì bị 1 tình trạng là Auth và Firestore của 
@@ -67,8 +68,12 @@ export default function AuthProvider({ children }) {
       }
     });
 
+    console.log(user)
     return () => unsubscribe();
+    
   }, [navigate]);
+
+   
 
   return (
     <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>

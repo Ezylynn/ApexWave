@@ -2,18 +2,16 @@ import React, { useContext, useEffect } from "react";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { AuthContext } from "../Context/AuthProvider";
+import {signOut} from 'firebase/auth'
 
 
 function Home() {
   const { user } = useContext(AuthContext);
-  console.log(user);
-
- 
-
+  
   return (
     <div>
       <Header user={user} ></Header>
-      <main className="mt-2 mx-auto container flex flex-col items-center justify-between gap-5 bg-white md:flex-row">
+      <main className="mx-auto container flex flex-col items-center justify-between min-h-screen gap-5 bg-white md:flex-row">
         <div className="flex w-full flex-col content-between p-10 md:w-1/2">
           <div>
             <p className="text-3xl font-bold sm:text-3xl lg:text-4xl xl:text-4xl 2xl:text-5xl">
@@ -23,7 +21,7 @@ function Home() {
               Great software that allows you to chat from any place at any time
               without any interruption.
             </p>
-            <button className="mt-6 rounded-md bg-[#FB8E0B] px-4 py-3 text-white shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2">
+            <button className="mt-6 rounded-md bg-[#FB8E0B] px-4 py-3 text-white shadow hover:bg-[#E6870A] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-offset-2">
               Start Chatting Now
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -262,21 +260,6 @@ function Home() {
                 but the majority have suffered all injected humour or randomised
                 words which don't look even slightly believable.
               </p>
-              <button className="mt-6 self-center rounded-md bg-[#FB8E0B] px-3 py-3 text-white shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2">
-                Start Chatting Now
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="ml-2 inline h-6 w-6 font-semibold"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.72 7.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 1 1-1.06-1.06l2.47-2.47H3a.75.75 0 0 1 0-1.5h16.19l-2.47-2.47a.75.75 0 0 1 0-1.06Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
             </div>
           </div>
         </div>
@@ -286,6 +269,7 @@ function Home() {
           <p className="px-6 pb-8 text-center text-2xl font-bold text-white">
             Our blessed client said this about us 😍
           </p>
+
           <div className="flex flex-col items-center md:flex-row md:justify-around">
             <div className="w-3/4 md:w-1/3">
               <div className="flex flex-col gap-4 rounded-md bg-white p-6">

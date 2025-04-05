@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import Footer from "../layout/Footer";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import {
+  EyeIcon,
+  EyeSlashIcon,
+} from "@heroicons/react/24/solid";
 
 import {
   auth,
@@ -11,7 +15,7 @@ import {
   signInWithPopup,
 } from "../firebase/config";
 
-import { ArrowLongLeftIcon } from '@heroicons/react/24/solid'
+
 
 
 function SignIn() {
@@ -20,6 +24,10 @@ function SignIn() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate()
+  
+    // const [showPassword, setShowPassword] = useState(false);
+  // const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
 
   // 🔹 Handle Email/Password Login
@@ -55,11 +63,8 @@ function SignIn() {
 
   return (
     <div>
-      <div onClick={() => navigate('/')} className="absolute top-3 left-3 md:top-6 md:left-6 flex items-center gap-2">
-        <ArrowLongLeftIcon className="size-8 text-pr font-semibold text-[#FB8E0B]" />
-        <p className='text-xl font-semibold text-[#FB8E0B]'>Home</p>
-      </div>
-      <main className="container h-screen mx-auto flex flex-col items-center justify-center gap-12">
+
+      <main className="container min-h-screen mx-auto flex flex-col items-center justify-center gap-12 py-12">
 
 
         <header className="w-full text-center">
@@ -70,7 +75,7 @@ function SignIn() {
         <section>
           <form onSubmit={handleEmailLogin} className="flex flex-col gap-4">
             <input
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+              className="w-full rounded-lg  px-4 py-2 border border-gray-300 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
               type="email"
               placeholder="Enter Your Email"
               value={email}
@@ -87,6 +92,7 @@ function SignIn() {
 
               onChange={(e) => setPassword(e.target.value)}
             />
+
             <button className="w-full bg-[#FB8E0B] text-white py-2 rounded-sm hover:bg-[#db7e0d]" type="submit">
               Log In
             </button>

@@ -109,6 +109,12 @@ const handleAddUser = (user) => {
 
     try {
       const roomRef = doc(db, 'rooms', roomID)
+
+      // temporary fixing, need to add a manual update to username when change
+      const userRef = doc(db, 'users', user.uid)
+      const username = await getDoc(userRef)
+      const usernameSort = username.data()
+
       // clear message input box
       getMessage('')
 
@@ -116,7 +122,7 @@ const handleAddUser = (user) => {
       let time = new Date()
       let newMessage = {
         content: message,
-        displayName: user.displayName,
+        displayName: usernameSort.displayName,
         time:  `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`,
         uid: user.uid
       }
@@ -261,6 +267,7 @@ const handleAddUser = (user) => {
       getRoomDesc('');
       }
 
+      toggleAddRoom()
 
       
     }
@@ -280,7 +287,7 @@ const handleAddUser = (user) => {
         {/* add user */}
 
         {addUser && <div
-          className="w-[400px] h-[500px] mt-40 left-1/4 md:left-1/2 md:-translate-x-1/2 absolute bg-white shadow-2xl rounded-lg p-6 z-200 transition-all  "
+          className="w-[400px] h-[500px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:left-1/2 md:-translate-x-1/2 absolute bg-white shadow-2xl rounded-lg p-6 z-40 transition-all  "
         >
           {/* Close Button */}
           <button onClick={() => toggleBoxAddUser()}
@@ -366,7 +373,7 @@ const handleAddUser = (user) => {
 
 
         {addRoomBox && <div
-          className="w-[400px] mt-60 left-1/4 md:left-1/2 md:-translate-x-1/2 absolute bg-white shadow-2xl rounded-lg p-6 z-200 transition-all"
+          className="w-[400px] left-1/2 bottom-1/4 -translate-x-1/2 -translate-y-1/2 md:left-1/2 md:-translate-x-1/2 absolute bg-white shadow-2xl rounded-lg p-6 z-200 transition-all"
         >
           {/* Close Button */}
           <button onClick={toggleAddRoom}
@@ -423,13 +430,13 @@ const handleAddUser = (user) => {
         {/* contact */}
         {contactList && <section
           id="contact-list"
-          className="mx-auto absolute md:static bg-white  w-full flex-col items-center shadow-md md:flex md:w-[30%] z-100"
+          className="mx-auto absolute md:static bg-white  w-full flex-col items-center shadow-md md:flex md:w-[40%] z-100"
         >
-          <nav className="fixed md:static flex max-h-12 w-full flex-row items-center justify-between bg-[#FB8E0B] py-4  shadow-md z-50">
+          <nav className="static flex max-h-12 w-full flex-row items-center justify-between bg-[#FB8E0B] py-4  shadow-md z-50">
             <p className="pl-4 text-center text-lg font-semibold text-white">
               Rooms
             </p>
-            <svg onClick={() => toggleBoxContact()}
+            <svg onClick={() => (toggleBoxContact(),addRoom(false))}
               id="x-button"
               className="size-10 pr-4 text-white"
               aria-colspan
@@ -447,31 +454,31 @@ const handleAddUser = (user) => {
             </svg>
           </nav>
           <section className="flex flex-col w-full justify-start items-center h-screen">
-            <div className="flex w-[90%] flex-col gap-6 overflow-y-auto h-full mt-40 md:mt-0 pt-4">
+            <div className="flex w-[90%] flex-col gap-6 overflow-y-auto max-h-[80%] pt-4">
 
 
               
               { rooms && 
                 rooms.map((room, key) => (
-                <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4 hover:cursor-pointer" key={key} onClick={() => { getDetailRoom(room) }}>
+                <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4 hover:cursor-pointer" key={key} onClick={() => (getDetailRoom(room),toggleBoxContact())}>
                   <p className="text-lg font-semibold">{room.name}</p>
                   <p className="line-clamp-1 text-sm font-light">
                     {room.description}
                   </p>
                 </div>
               ))}
-              <div onClick={toggleAddRoom} className="flex flex-col gap-2 rounded-lg bg-slate-100 p-4 items-center justify-center hover:cursor-pointer">
+            </div>
+
+              <div onClick={toggleAddRoom} className="w-[90%] flex flex-col gap-2 rounded-lg bg-slate-100 px-4 py-6 items-center justify-center hover:cursor-pointer mt-8">
                 <p className="text-lg font-semibold"><span> + </span>Add room</p>
               </div>
-
-            </div>
           </section>
         </section>
         }
 
 
         {/* chat message main */}
-        <section className="w-full container max-h-[600px] overflow-hidden flex flex-col">
+        <section className="w-full min-h-screen container max-h-[600px] overflow-hidden flex flex-col">
           {/* nav bar */}
           <div className="flex max-h-12 w-full flex-row items-center justify-between px-4 py-8">
             <div onClick={() => navigate('/')} className="logo">
@@ -515,11 +522,11 @@ const handleAddUser = (user) => {
                   </section>
                 </nav>
 
-                <section className="w-full flex-1 h-screen overflow-hidden p-4 md:pt-4 flex flex-col gap-4">
+                <section className="w-full flex-1 h-screen overflow-hidden p-4 md:pt-4 flex flex-col gap-4 items-center justify-start">
                   {messageExist ? (
                     <div
-                      className="w-full flex flex-col items-center justify-start gap-4 overflow-y-auto p-4 pb-2 md:pb-4 md:pt-4 max-h-[calc(100vh-300px)]"
-                      style={{ maxHeight: "calc(100vh - 300px)", overflowY: "auto" }}
+                      className="w-full flex flex-col items-center justify-start gap-4 overflow-y-auto p-4 pb-2 md:pb-4 md:pt-4 max-h-[calc(100vh-200px)]"
+                      style={{ maxHeight: "calc(100vh - 200px)", overflowY: "auto" }}
                     >
 
                       {messageArray &&
@@ -555,7 +562,7 @@ const handleAddUser = (user) => {
                 </section>
 
                 {/* Input Field */}
-                <div className="w-full fixed md:static left-0 bottom-0 flex items-center justify-evenly gap-4 bg-gray-200 p-4">
+                <div className="w-full static flex items-center justify-evenly gap-4 bg-gray-200 p-4">
                   <input value={message || ''}
                     onChange={(e) => getMessage(e.target.value)}
                     className="flex-1 rounded-lg border p-2 bg-white focus:outline-none focus:ring focus:ring-orange-300"

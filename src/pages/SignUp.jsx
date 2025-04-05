@@ -9,9 +9,9 @@ import {
 } from "../firebase/config";
 import { createUserWithEmailAndPassword, getAdditionalUserInfo } from "firebase/auth";
 
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, addDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
-import { ArrowLongLeftIcon } from "@heroicons/react/24/solid";
+import Footer from "../layout/Footer";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -34,15 +34,31 @@ const SignUp = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      let dateObj = new Date()
+      const creationDate = `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/` +
+                          `${dateObj.getDate().toString().padStart(2, '0')}/` +
+                          `${dateObj.getFullYear()}`;
 
       // Lưu vào Firestore
-      await setDoc(doc(db, "users", user.uid), {
+      const userRef = await setDoc(doc(db, "users", user.uid), {
         displayName: displayName || "",
         email: user.email,
-        photoURL: user.photoURL || "",
         uid: user.uid,
         providerId: "password", // Đăng ký bằng email/password
+        dateCreated: creationDate
       });
+
+      await setDoc(doc(db, "users_Profile", user.uid), {
+        displayName: displayName || "",
+        photoURL: user.photoURL || "",
+        userId: user.uid,
+        dateCreated:creationDate,
+        dob: "",
+        age: "",
+        address: ""
+      });
+
+      
 
       navigate("/");
     } catch (err) {
@@ -56,6 +72,8 @@ const SignUp = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const additionalUserInfo = result.additionalUserInfo;
+
+      
 
       // Lưu vào Firestore
       await setDoc(doc(db, "users", user.uid), {
@@ -96,17 +114,13 @@ const SignUp = () => {
 
   return (
     <div>
-      <div onClick={() => navigate("/")} className="absolute top-3 left-3 flex items-center gap-2">
-        <ArrowLongLeftIcon className="size-8 text-[#FB8E0B]" />
-        <p className="text-xl font-semibold text-[#FB8E0B]">Home</p>
-      </div>
 
-      <main className="container mx-auto flex h-screen items-center justify-center">
-        <div className="flex items-center justify-center gap-8 px-10 py-14 rounded-md md:border-[1px] md:border-gray-200">
+      <main className="container mx-auto flex min-h-screen items-center justify-center">
+        <div className="flex items-center justify-center gap-8 px-10 py-14 rounded-md">
           <div className="flex flex-col items-center justify-center gap-10">
             <header className="w-full text-center">
-              <p className="text-xl font-semibold">Create an account</p>
-              <p className="text-sm font-light">Connect with your friends today!</p>
+              <p className="text-xl md:text-2xl font-semibold">Create an account</p>
+              <p className="ext-sm md:text-lg font-light">Connect with your friends today!</p>
             </header>
 
             {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -114,7 +128,7 @@ const SignUp = () => {
             <section>
               <form className="flex flex-col gap-4" onSubmit={handleSignUp}>
                 <input
-                  className="w-full rounded-lg border px-4 py-2"
+                  className="w-full rounded-lg border px-4 py-2  border border-gray-300 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
                   type="text"
                   placeholder="Enter Your Name"
                   value={displayName}
@@ -122,7 +136,7 @@ const SignUp = () => {
                   required
                 />
                 <input
-                  className="w-full rounded-lg border px-4 py-2"
+                  className="w-full rounded-lg border px-4 py-2  border border-gray-300 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
                   type="email"
                   placeholder="Enter Your Email"
                   value={email}
@@ -130,7 +144,7 @@ const SignUp = () => {
                   required
                 />
                 <input
-                  className="w-full rounded-lg border px-4 py-2"
+                  className="w-full rounded-lg border px-4 py-2  border border-gray-300 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
                   type="password"
                   placeholder="Create a Password"
                   value={password}
@@ -138,7 +152,7 @@ const SignUp = () => {
                   required
                 />
                 <input
-                  className="w-full rounded-lg border px-4 py-2"
+                  className="w-full rounded-lg border px-4 py-2  border border-gray-300 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
                   type="password"
                   placeholder="Confirm Password"
                   value={confirmPassword}
@@ -153,22 +167,25 @@ const SignUp = () => {
 
             <div className="flex w-full items-center justify-center">
               <div className="h-[1px] w-full bg-gray-400" />
-              <span className="text-light mx-4">Or With</span>
+              <span className="text-light mx-4 whitespace-nowrap">Or With</span>
               <div className="h-[1px] w-full bg-gray-400" />
             </div>
 
             <section className="flex flex-col items-center gap-4">
               <button
                 onClick={handleGoogleSignUp}
-                className="w-4/5 flex items-center border rounded-lg py-2 px-4"
-              >
+                className="w-4/5 flex items-center border border-gray-300 rounded-lg py-2 px-4"
+              > 
+                <img className="size-6 mr-4" src="../assets/GoogleLogo.jpg" alt="Google logo" />
                 <span className="w-4/5 text-sm font-semibold">Sign up with Google</span>
+                
               </button>
 
               <button
                 onClick={handleFacebookSignUp}
-                className="w-4/5 flex items-center border rounded-lg py-2 px-4"
+                className="w-4/5 flex items-center border border-gray-300 rounded-lg py-2 px-4"
               >
+              <img className="size-6 mr-4" src="../assets/Facebook_Logo.png" alt="Facebook logo" />
                 <span className="w-4/5 text-sm font-semibold">Sign up with Facebook</span>
               </button>
 
@@ -182,6 +199,8 @@ const SignUp = () => {
           </div>
         </div>
       </main>
+
+      <Footer/>
     </div>
   );
 };
