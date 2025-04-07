@@ -15,13 +15,12 @@ function Home() {
         <div className="flex w-full flex-col content-between p-10 md:w-1/2">
           <div>
             <p className="text-3xl font-bold sm:text-3xl lg:text-4xl xl:text-4xl 2xl:text-5xl">
-              Start chatting with customers, anytime, anywhere with Apex
+                Start chatting anytime, anywhere — with Apex Wave
             </p>
             <p className="mt-4 text-base sm:text-lg lg:text-xl">
-              Great software that allows you to chat from any place at any time
-              without any interruption.
+              Apex Wave is a secure chat app with end-to-end encryption, letting you chat freely and privately with seamless, uninterrupted performance.
             </p>
-            <button className="mt-6 rounded-md bg-[#FB8E0B] px-4 py-3 text-white shadow hover:bg-[#E6870A] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-offset-2">
+            <button className="mt-6 rounded-md bg-[#FB8E0B] px-4 py-3 text-white shadow hover:bg-[#E6870A] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-offset-2 hover:cursor-pointer">
               Start Chatting Now
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -111,9 +110,9 @@ function Home() {
         <p className="py-20 text-center text-2xl font-semibold bg-white">
           Features for a better experience
         </p>
-        <div className="flex mx-auto container w-full flex-col items-center gap-10 pb-20 bg-white md:flex-row md:justify-center md:gap-10 md:px-20">
+        <div className="flex mx-auto container w-full flex-col items-center gap-10 pb-20 bg-white lg:flex-row md:justify-center md:gap-10 md:px-20">
           {/* camera */}
-          <div className="md: flex flex-col items-center gap-5 md:flex-row">
+          <div className="flex flex-col items-center gap-5 md:flex-row">
             <div>
               <svg
                 className="size-12"
@@ -140,13 +139,13 @@ function Home() {
               </svg>
             </div>
             <div className="flex flex-col items-center gap-5">
-              <p className="text-center font-medium">Video Messaging</p>
-              <p className="line-clamp-2 px-8 text-center">
-                This software is very easy for you to manage. You can use it as
-                you wish.
+              <p className="text-center font-medium">Crystal-Clear Video Calling</p>
+              <p className=" px-8 text-center">
+                Connect face-to-face with friends or clients in real time. Apex Wave’s high-quality, low-latency video calls keep conversations smooth and secure.
               </p>
             </div>
           </div>
+
           {/* clock */}
           <div className="flex flex-col items-center gap-5 md:flex-row">
             <div>
@@ -175,10 +174,9 @@ function Home() {
               </svg>
             </div>
             <div className="flex gap-5 flex-col items-center ">
-              <p className="text-center font-medium">Save your time</p>
-              <p className="line-clamp-2 px-8 text-center">
-                This software is very easy for you to manage. You can use it as
-                you wish.
+              <p className="text-center font-medium"> Self-Destructing Messages</p>
+              <p className="px-8 text-center">
+                Set messages to disappear after a custom time. Whether it’s a few seconds or a few days, you control how long your content stays visible.
               </p>
             </div>
           </div>
@@ -210,10 +208,10 @@ function Home() {
               </svg>
             </div>
             <div className="flex flex-col items-center gap-5">
-              <p className="text-center font-medium">Keep safe &amp; private</p>
-              <p className="line-clamp-2 px-8 text-center">
-                This software is very easy for you to manage. You can use it as
-                you wish.
+              <p className="text-center font-medium">Advanced Security </p>
+              <p className="px-8 text-center">
+                Built with privacy as a priority, Apex Wave offers end-to-end encryption, secure login, and real-time threat protection —
+                keeping your data safe at every step.
               </p>
             </div>
           </div>
@@ -228,16 +226,14 @@ function Home() {
           {/* Text Section */}
           <div className="flex w-full flex-col items-center gap-5 md:w-1/2 md:items-start">
             <p className="px-8 py-5 text-center text-xl font-semibold md:text-left md:text-2xl">
-              Meet your customers, with live video chat
+                Blazing-Fast Messaging & Video Calling
             </p>
             <div className="flex w-full flex-col gap-5">
-              <p className="line-clamp-3 px-8 text-left">
-                Proin faucibus nibh et sagittis a. Lacinia purus ac amet
-                pellentesque aliquam enim.
+              <p className="px-8 text-left">
+                Apex Wave is built for speed — messages send and sync instantly, even on slow or unstable networks. 
               </p>
-              <p className="line-clamp-3 px-8 text-left">
-                Get paychecks up to two days early. Get a $20 bonus when you
-                receive qualifying direct deposits.
+              <p className="px-8 text-left">
+                With an ultra-light backend and real-time cloud sync, you’ll never miss a moment, no matter where you are or what device you’re on. It’s fast, fluid, and always ready.
               </p>
             </div>
           </div>
@@ -252,14 +248,14 @@ function Home() {
           {/* Text Section */}
           <div className="flex w-full flex-col items-center gap-5 md:w-1/2 md:items-start">
             <p className="px-8 py-5 text-center text-xl font-semibold md:text-left md:text-2xl">
-              Start selling directly inside conversations
+              Why Apex Wave? Because Privacy Shouldn’t Be a Premium
             </p>
-            <div className="flex flex-col gap-10">
-              <p className="line-clamp-4 px-8 text-left md:text-left">
-                There are many variations of passages of Lorem Ipsum available,
-                but the majority have suffered all injected humour or randomised
-                words which don't look even slightly believable.
+            <div className="flex flex-col gap-10 items-center ">
+              <p className=" px-8 text-left md:text-left">
+                  Apex Wave is more than just another chat app. It’s a private, encrypted, no-nonsense platform for real conversations — built for people who value control, trust, and clarity in their digital lives.
               </p>
+
+              <p className=" px-8 text-left md:text-left">Join the wave. Start chatting the secure way — with Apex Wave.</p>
             </div>
           </div>
         </div>
@@ -274,21 +270,17 @@ function Home() {
             <div className="w-3/4 md:w-1/3">
               <div className="flex flex-col gap-4 rounded-md bg-white p-6">
                 <p className="text-center font-semibold text-[#FD6003]">
-                  “Incredible Experience”
+                  “An Incredible Experience”
                 </p>
                 <p className="text-center font-light text-[#383A47]">
-                  We had an incredible experience working with Mixland and were
-                  impressed they made such a big difference in only three weeks.
-                  Our team is so grateful for the wonderful improvements they
-                  made and their ability to get familiar with the concept so
-                  quickly.
+                  “Apex Wave has transformed how I connect with clients. The end-to-end encryption gives me peace of mind, knowing our conversations are private and secure.”
                 </p>
               </div>
               <div className="mt-6 flex flex-row justify-center">
                 <img className="w-16" src="../assets/african-woman.png" />
                 <div className="flex flex-col justify-evenly pl-4">
-                  <p className="font-medium text-white">Wade Warren</p>
-                  <p className="font-light text-white">CEO of ABC Coporation</p>
+                  <p className="font-medium text-white">Sarah L.</p>
+                  <p className="font-light text-white">Freelance Consultant</p>
                 </div>
               </div>
             </div>
@@ -298,18 +290,14 @@ function Home() {
                   “Dependable, Responsive, Professional”
                 </p>
                 <p className="text-center font-light text-[#383A47]">
-                  Fermin Apps has collaborated with Mixland team for several
-                  projects such as Photo Sharing Apps and Custom Social
-                  Networking Apps. The experience has been pleasant,
-                  professional and exceeding our expectations. The team is
-                  always thinking beyond.
+                   The cross-device syncing is seamless. I can start a conversation on my phone and pick it up on my laptop without missing a beat. Apex Wave makes communication effortless.
                 </p>
               </div>
               <div className="mt-6 flex flex-row justify-center">
                 <img className="w-16" src="../assets/sitting-woman.png" />
                 <div className="flex flex-col justify-evenly pl-4">
-                  <p className="font-medium text-white">Esward Howard</p>
-                  <p className="font-light text-white">Founder of CHAMELLIA</p>
+                  <p className="font-medium text-white">Emily R.</p>
+                  <p className="font-light text-white">Project Manager</p>
                 </div>
               </div>
             </div>

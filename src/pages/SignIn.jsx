@@ -184,11 +184,11 @@ function SignIn() {
                       className="absolute inset-y-0 right-3 flex items-center text-gray-400"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? <EyeIcon className="size-6" /> : <EyeSlashIcon className="size-6" />}
+                      {showPassword ? <EyeIcon className="size-6 hover:cursor-pointer" /> : <EyeSlashIcon className="size-6 hover:cursor-pointer" />}
                     </button>
             </div>
           
-            <button className="w-full bg-[#FB8E0B] text-white py-2 rounded-sm hover:bg-[#db7e0d]" type="submit">
+            <button className="w-full bg-[#FB8E0B] text-white py-2 rounded-sm hover:bg-[#db7e0d] hover:cursor-pointer" type="submit">
               Log In
             </button>
             {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -204,7 +204,7 @@ function SignIn() {
           </div>
 
           {/* 🔹 Google Sign-In */}
-          <button onClick={handleGoogleLogin} className="w-4/5 flex items-center justify-center border border-gray-300 rounded-lg py-2 px-4">
+          <button onClick={handleGoogleLogin} className="w-4/5 flex items-center justify-center border border-gray-300 rounded-lg py-2 px-4 hover:cursor-pointer">
             <img className="size-6 mr-4" src="../assets/GoogleLogo.jpg" alt="Google logo" />
             <span className="w-1/2 text-sm font-semibold">Google</span>
           </button>
@@ -212,7 +212,7 @@ function SignIn() {
 
 
           {/* 🔹 Facebook Sign-In */}
-          <button onClick={handleFacebookLogin} className="w-4/5 flex items-center justify-center border border-gray-300 rounded-lg py-2 px-4">
+          <button onClick={handleFacebookLogin} className="w-4/5 flex items-center justify-center border border-gray-300 rounded-lg py-2 px-4 hover:cursor-pointer">
             <img className="size-6 mr-4" src="../assets/Facebook_Logo.png" alt="Facebook logo" />
             <span className="w-1/2 text-sm font-semibold text-nowrap">Facebook</span>
           </button>

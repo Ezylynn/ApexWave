@@ -58,7 +58,7 @@ function Contact() {
                 ></textarea>
 
                 <button
-                  className="w-1/2 rounded-lg bg-[#FB8E0B] py-2 text-white hover:bg-[#FD6003] text-lg font-medium"
+                  className="w-1/2 rounded-lg bg-[#FB8E0B] py-2 text-white hover:bg-[#FD6003] text-lg font-medium hover:cursor-pointer"
                   type="submit"
                 >
                   Submit

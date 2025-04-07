@@ -217,7 +217,7 @@ const SignUp = () => {
                       className="absolute inset-y-0 right-3 flex items-center text-gray-400"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? <EyeIcon className="size-6" /> : <EyeSlashIcon className="size-6" />}
+                      {showPassword ? <EyeIcon className="size-6 hover:cursor-pointer" /> : <EyeSlashIcon className="size-6 hover:cursor-pointer" />}
                     </button>
                 </div>
                 
@@ -239,14 +239,14 @@ const SignUp = () => {
                       className="absolute inset-y-0 right-3 flex items-center text-gray-400"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
-                      {showConfirmPassword ? <EyeIcon className="size-6" /> : <EyeSlashIcon className="size-6" />}
+                      {showConfirmPassword ? <EyeIcon className="size-6 hover:cursor-pointer" /> : <EyeSlashIcon className="size-6 hover:cursor-pointer" />}
                     </button>
                   </div>
 
             
               
 
-                <button className="w-full rounded-sm bg-[#FB8E0B] py-2 text-white" type="submit">
+                <button className="w-full rounded-sm bg-[#FB8E0B] py-2 text-white hover:cursor-pointer" type="submit">
                   Sign Up
                 </button>
               </form>
@@ -261,7 +261,7 @@ const SignUp = () => {
             <section className="flex flex-col items-center gap-4">
               <button
                 onClick={handleGoogleSignUp}
-                className="w-4/5 flex items-center border border-gray-300 rounded-lg py-2 px-4"
+                className="w-4/5 flex items-center border border-gray-300 rounded-lg py-2 px-4 hover:cursor-pointer"
               > 
                 <img className="size-6 mr-4" src="../assets/GoogleLogo.jpg" alt="Google logo" />
                 <span className="w-4/5 text-sm font-semibold">Sign up with Google</span>
@@ -270,7 +270,7 @@ const SignUp = () => {
 
               <button
                 onClick={handleFacebookSignUp}
-                className="w-4/5 flex items-center border border-gray-300 rounded-lg py-2 px-4"
+                className="w-4/5 flex items-center border border-gray-300 rounded-lg py-2 px-4 hover:cursor-pointer"
               >
               <img className="size-6 mr-4" src="../assets/Facebook_Logo.png" alt="Facebook logo" />
                 <span className="w-4/5 text-sm font-semibold">Sign up with Facebook</span>
