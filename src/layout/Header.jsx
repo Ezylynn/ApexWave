@@ -3,17 +3,40 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthProvider";
+import {signOut} from 'firebase/auth'
+
+
+import { UserCircleIcon } from '@heroicons/react/24/solid';
+import { auth } from "../firebase/config";
 
 function Header({ user }) {
   const [menuOption, setMenuOption] = useState(false);
+  const [userMenuDropDown, setUserDD] = useState(false)
+
 
   const navigate = useNavigate()
+
+  let timeoutId; // Stores the timeout reference
 
   const onClickToOpenMenuOption = () => {
     setMenuOption(!menuOption);
   }
-  console.log(user);
 
+  const openUserMenu = () => {
+    clearTimeout(timeoutId); 
+    setUserDD(true)
+  }
+
+  const closeUserMenu = () => {
+    timeoutId = setTimeout(() => {
+    setUserDD(false);
+    }, 100); // 300ms delay before closing
+  }
+  
+
+  const logOut = async () => {
+    await signOut(auth)
+  }
 
 
   const navigateList = [
@@ -30,17 +53,16 @@ function Header({ user }) {
       url: "/contact",
     },
     {
-      name: "Login",
-      url: "/sign-in",
+      name: "My Account",
+      url: "/profile",
     },
     {
-      name: "Get Started",
-      url: "/sign-up",
+      name: "Log Out"
     }
   ]
   return (
-
-    <nav className=" w-full mx-auto container flex items-center justify-between sticky max-h-16 ">
+    <div className="w-full shadow-sm sticky z-100 bg-white top-0"> 
+      <nav className=" w-full mx-auto container flex items-center justify-between sticky max-h-16 ">
       <div onClick={() => navigate('/')} className="logo">
         <svg
           className="size-16 pl-3 sm:size-20 md:size-24 lg:size-28 xl:size-32 2xl:size-36  sm:pl-6 md:pl-8 lg:pl-10 xl:pl-12 2xl:pl-14 "
@@ -85,15 +107,25 @@ function Header({ user }) {
           id="mobile-options"
           className="w-full h-auto bg-[#FB8E0B] md:hidden absolute top-full flex flex-col text-base font-semibold"
         >
-          {navigateList.map((item, index) => (
-            <Link
-              key={index}
-              className="w-full flex-grow bg-[#FB8E0B] hover:bg-[#FB8E0B] no-underline text-center py-2"
-              to={item.url}
-            >
-              {item.name}
-            </Link>
-          ))}
+            {navigateList.map((item, index) => (
+              item.name === 'Log Out' ? (
+                <Link
+                  onClick={logOut}
+                  key={index}
+                  className="w-full text-white flex-grow bg-[#FB8E0B] hover:bg-[#E6870A] no-underline text-center py-2"
+                >
+                  {item.name}
+                </Link>
+              ) : (
+                <Link
+                  key={index}
+                  className="w-full text-white  flex-grow bg-[#FB8E0B] hover:bg-[#E6870A] no-underline text-center py-2"
+                  to={item.url}
+                >
+                  {item.name}
+                </Link>
+              )
+            ))}
         </div>
       )}
 
@@ -102,7 +134,9 @@ function Header({ user }) {
         {/* Left Section */}
         <div className="w-2/3 flex items-center gap-6 justify-center">
           {navigateList.map((item, index) => (
-            <Link
+            item.name == 'Log Out' || item.name == 'My Account' ?
+              null
+            :<Link
               key={index}
               className=" text-black py-1 no-underline  text-base  xl:text-lg "
               to={item.url}
@@ -112,11 +146,45 @@ function Header({ user }) {
           ))}
         </div>
         {/* Right Section */}
-        <div className="w-1/3 flex items-center gap-8 justify-center ">
-          {user?.displayName ? (user.displayName) : (`hello world`)}
+         
+
+        <div
+          onMouseEnter={openUserMenu}
+          onMouseLeave={closeUserMenu}
+          className="relative flex items-center justify-center w-fit"
+        >
+          {/* Trigger Icon */}
+          {user?.displayName ? (
+            <UserCircleIcon className="size-10 md:size-12 text-[#FB8E0B]" />
+          ) : (
+            <Link to="/sign-in" className="text-sm md:text-lg text-[#8E74D0] font-semibold">
+              Log In
+            </Link>
+          )}
+
+            {/* Dropdown Menu */}
+            {userMenuDropDown && (
+              <div
+                className="absolute top-full mt-3 w-40 bg-white shadow-lg rounded-lg z-50 flex flex-col items-center border-0 "
+              >
+                <Link
+                  to="/profile"
+                  className="w-full text-black hover:bg-[#FB8E0B] hover:text-white text-sm lg:text-base text-center py-2  text-nowrap transition rounded-t-md"
+                >
+                  My Account
+                </Link>
+                <Link
+                  onClick={logOut}
+                  className="w-full text-black hover:bg-[#FB8E0B] hover:text-white text-sm lg:text-base text-center py-2  transition rounded-b-md"
+                >
+                  Log Out
+                </Link>
+              </div>
+            )}
         </div>
       </div>
     </nav>
+    </div>
   );
 }
 

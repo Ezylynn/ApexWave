@@ -7,6 +7,7 @@ import Chat from "./pages/Chat";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Contact from "./pages/Contact";
+import Profile from './pages/Profile'
 import AuthProvider from "./Context/AuthProvider";
 import RoomProvider from "./Context/RoomProvider";
 function App() {
@@ -22,6 +23,7 @@ function App() {
             <Route path="/contact" element={<Contact />}></Route>
             <Route path="/sign-in" element={<SignIn />}></Route>
             <Route path="/sign-up" element={<SignUp />}></Route>
+            <Route path="/profile" element={<Profile />}></Route>
           </Routes>
         </RoomProvider>
       </AuthProvider>

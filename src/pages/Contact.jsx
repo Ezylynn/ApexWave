@@ -1,20 +1,22 @@
-import React from "react";
-
+import React, {useContext} from "react";
+import { AuthContext } from "../Context/AuthProvider";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 
 function Contact() {
+  const { user } = useContext(AuthContext);
   return (
-    <div className="w-full flex flex-col items-center justify-between gap-12">
-      <Header />
+    
+    <div  className="w-full flex flex-col items-center justify-between">
+      <Header user={user} />
 
-      <main className="container mx-auto flex flex-col gap-12 min-h-screen items-center justify-center ">
+      <main className="container mx-auto flex flex-col gap-12 min-h-screen items-center justify-center py-12 ">
         {/* Title */}
         <div className="w-full flex flex-col items-center gap-4">
           <p className="font-semibold text-4xl lg:text-5xl">Contact Us!</p>
           <p className="text-center text-lg font-extralight text-wrap px-28">
             We’d love to hear from you! If you have any feedback, questions, or
-            suggestions about the Pi Day website, feel free to reach out.
+            suggestions about ApexWave, feel free to reach out.
           </p>
           <p className="text-center  text-lg  font-medium text-wrap px-28">
             {" "}
@@ -30,19 +32,25 @@ function Contact() {
             </header>
 
             <section className="w-full">
-              <form className="flex flex-col items-center gap-4">
+              <form action={"https://formspree.io/f/mldjpkaz"} method={'POST'}  className="flex flex-col items-center gap-4">
                 <input
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#8E74D0]"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+                  required
                   type="text"
+                  name="user name"
                   placeholder="Name"
                 />
                 <input
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#8E74D0]"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+                  required
                   type="email"
+                  name="user email"
                   placeholder="Email"
                 />
                 <textarea
-                  className="w-full rounded-lg border  resize-none border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#8E74D0]"
+                  className="w-full rounded-lg border resize-none  border-gray-300 px-4 py-2 focus:outline-none focus:ring focus:ring-[#FB8E0B]"
+                  required
+                  name="user message"
                   placeholder="Write your message"
                   id=""
                   cols="30"
@@ -50,7 +58,7 @@ function Contact() {
                 ></textarea>
 
                 <button
-                  className="w-1/2 rounded-lg bg-[#FB8E0B] py-2 text-white hover:bg-[#886fc7] text-lg font-medium"
+                  className="w-1/2 rounded-lg bg-[#FB8E0B] py-2 text-white hover:bg-[#FD6003] text-lg font-medium hover:cursor-pointer"
                   type="submit"
                 >
                   Submit
