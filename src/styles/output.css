@@ -527,9 +527,6 @@
   .absolute {
     position: absolute;
   }
-  .fixed {
-    position: fixed;
-  }
   .relative {
     position: relative;
   }
@@ -631,30 +628,6 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-  }
-  .line-clamp-2 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
-  .line-clamp-3 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-  }
-  .line-clamp-4 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-  }
-  .line-clamp-10 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 10;
   }
   .block {
     display: block;
@@ -763,12 +736,6 @@
   .w-48 {
     width: calc(var(--spacing) * 48);
   }
-  .w-\[\%\] {
-    width: %;
-  }
-  .w-\[80\%\] {
-    width: 80%;
-  }
   .w-\[90\%\] {
     width: 90%;
   }
@@ -781,23 +748,8 @@
   .w-full {
     width: 100%;
   }
-  .max-w-5\/6 {
-    max-width: calc(5/6 * 100%);
-  }
-  .max-w-\[30\%\] {
-    max-width: 30%;
-  }
   .max-w-\[70\%\] {
     max-width: 70%;
-  }
-  .max-w-\[90\%\] {
-    max-width: 90%;
-  }
-  .max-w-\[90\] {
-    max-width: 90;
-  }
-  .max-w-full {
-    max-width: 100%;
   }
   .max-w-sm {
     max-width: var(--container-sm);
@@ -807,9 +759,6 @@
   }
   .min-w-\[150px\] {
     min-width: 150px;
-  }
-  .min-w-full {
-    min-width: 100%;
   }
   .flex-1 {
     flex: 1;
@@ -1464,11 +1413,6 @@
   .md\:max-w-4xl {
     @media (width >= 48rem) {
       max-width: var(--container-4xl);
-    }
-  }
-  .md\:max-w-\[30\%\] {
-    @media (width >= 48rem) {
-      max-width: 30%;
     }
   }
   .md\:max-w-md {
