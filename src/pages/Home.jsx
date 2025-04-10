@@ -3,9 +3,10 @@ import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { AuthContext } from "../Context/AuthProvider";
 import {signOut} from 'firebase/auth'
-
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate
   const { user } = useContext(AuthContext);
   
   return (
@@ -20,7 +21,7 @@ function Home() {
             <p className="mt-4 text-base sm:text-lg lg:text-xl">
               Apex Wave is a secure chat app with end-to-end encryption, letting you chat freely and privately with seamless, uninterrupted performance.
             </p>
-            <button className="mt-6 rounded-md bg-[#FB8E0B] px-4 py-3 text-white shadow hover:bg-[#E6870A] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-offset-2 hover:cursor-pointer">
+            <button onClick={navigate('/chat')} className="mt-6 rounded-md bg-[#FB8E0B] px-4 py-3 text-white shadow hover:bg-[#E6870A] focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-offset-2 hover:cursor-pointer">
               Start Chatting Now
               <svg
                 xmlns="http://www.w3.org/2000/svg"
