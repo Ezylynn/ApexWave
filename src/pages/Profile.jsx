@@ -139,52 +139,45 @@ const Profile = () => {
             try {
             const userDisplayRef = doc(db, 'users_Profile', user.uid);
             const userRef = doc(db, 'users', user.uid);
-            // check if any changes made to display name, if so update name on 'users' collection
-                if(formData.fullName !== currentUser.fullName){
-                    await updateDoc(userRef, {
-                        displayName: formData.fullName
-                    })
-                  
-                    await updateDoc(userDisplayRef, {
-                        displayName: formData.fullName
-                    })
-                }
-                
+            // Store updates for each field
+            const changes = {};
+            const displayChanges = {};
 
-              if (formData.age.trim() === "") {
-                console.log('No change to age')
-                 setEditMode(false)
-              } else if (
-                formData.age !== currentUser.age &&                  // has changed
-                !isNaN(formData.age) &&                              // is a number
-                /^\d+$/.test(formData.age.trim())                    // only digits
-              ) {
-                setEditMode(false);
-                console.log("Age changed and valid, updating...");
-                await updateDoc(userDisplayRef, { age: formData.age });
-              } else {
-                cancelChange();
-                alert(" Invalid format. Please enter your age as a number");
-              }
+            // 🔹 Full Name
+            if (formData.fullName !== currentUser.fullName) {
+              changes.displayName = formData.fullName;
+              displayChanges.displayName = formData.fullName;
+            }
 
-            
-                if (formData.address !== currentUser.address) {
-                    setEditMode(false)
-                    await updateDoc(userDisplayRef,
-                        {
-                            address: formData.address,
-                        }
-                    )
-                }
-                         
-                if (formData.dob !== currentUser.dob) {
-                        setEditMode(false)
-                        await updateDoc(userDisplayRef,
-                            {
-                                dob: formData.dob,
-                            })
-                        
-                    }
+            // 🔹 Age
+            if (formData.age.trim() === "" || formData.age === currentUser.age) {
+              console.log("No change to age");
+            } else if (!isNaN(formData.age) && /^\d+$/.test(formData.age.trim())) {
+              displayChanges.age = formData.age;
+            } else {
+              cancelChange();
+              return alert("Invalid format. Please enter your age as a number");
+            }
+
+            // 🔹 Address
+            if (formData.address !== currentUser.address) {
+              displayChanges.address = formData.address;
+            }
+
+            // 🔹 Date of Birth
+            if (formData.dob !== currentUser.dob) {
+              displayChanges.dob = formData.dob;
+            }
+
+            // 🔹 Perform updates only if changes exist
+            if (Object.keys(changes).length > 0) {
+              await updateDoc(userRef, changes);
+            }
+            if (Object.keys(displayChanges).length > 0) {
+              await updateDoc(userDisplayRef, displayChanges);
+            }
+
+            setEditMode(false);
                     
                 }
                  

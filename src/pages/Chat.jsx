@@ -348,10 +348,11 @@ const handleAddUser = (user) => {
                       onClick={(e) => handleAddUser(e.currentTarget.dataset.value)}
                       data-value={user.uid}
                
-                      className={`max-w-5/6 flex flex-col items-start justify-center gap-2 py-4 px-4 rounded-sm ${selectedUid.includes(user.uid) ? "hover:bg-[#fb8f0bef] bg-[#FB8E0B]" : "hover:bg-gray-300 bg-gray-200 " }  hover:cursor-pointer`}
+                      className={`w-full flex flex-col items-start justify-center gap-2 py-8 px-4 truncate
+ 
+ rounded-sm  ${selectedUid.includes(user.uid) ? "hover:bg-[#fb8f0bef] bg-[#FB8E0B]" : "hover:bg-gray-300 bg-gray-200 " }  hover:cursor-pointer`}
                     >
-                      <p className="font-medium text-lg ">{user.displayName}</p>
-                      <p className="font-light text-sm">UID:{user.uid}</p>
+                      <p className="font-medium text-lg ">Username: {user.displayName}</p>
                     </div>
                   ))
               )
