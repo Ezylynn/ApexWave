@@ -9,7 +9,7 @@ A live chat application with user authentication, where you can add people and c
 - ✅ Instant Messaging  
 - ✅ User Authentication (Support log-in method via Facebook & Google)
 - ✅ Private Chats  
-- ✅ Group Chats (coming soon)
+- ✅ Group Chats
   
 ---
 
