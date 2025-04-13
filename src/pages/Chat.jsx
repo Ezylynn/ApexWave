@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext,useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthProvider";
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
@@ -19,7 +19,7 @@ function Chat() {
   const [allUsers, setAllUsers] = useState([])
   const [userSearch, setUserSearch] = useState('')
   const { user } = useContext(AuthContext);
-
+  const endRef = useRef(null);
 
 
   //room data
@@ -33,6 +33,7 @@ function Chat() {
   const [messageExist, setMessageExist] = useState(null)
 
   const [messageArray, setMessageArray] = useState(null)
+
 
   //set room id back to null later, true is set for testing purpose
   const [roomID, setroomID] = useState(null);
@@ -65,6 +66,13 @@ const handleAddUser = (user) => {
   });
 
 };
+  
+  
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      sendMessagetoFireStore()
+    }
+  };
 
   // listen to window size to adjust footer responsiveness
   useEffect(() => {
@@ -553,8 +561,10 @@ const handleAddUser = (user) => {
                             </div>
                           );
                         }
-                      })}
+                        })}
+                    
                     </div>
+
                   ) : (
                     <div className="flex w-full h-full items-center justify-center text-gray-400">
                       <p>No Message</p>
@@ -568,9 +578,10 @@ const handleAddUser = (user) => {
                     onChange={(e) => getMessage(e.target.value)}
                     className="flex-1 rounded-lg border p-2 bg-white focus:outline-none focus:ring focus:ring-orange-300"
                     type="text"
+                    onKeyDown={handleKeyDown}
                     placeholder="Write a message"
                   />
-                  <button onClick={sendMessagetoFireStore} className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600">
+                  <button  onClick={sendMessagetoFireStore} className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600">
                     Send
                   </button>
                 </div>
