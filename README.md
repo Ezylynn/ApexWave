@@ -28,7 +28,7 @@ A live chat application with user authentication, where you can add people and c
 
 ---
 
-⏳ **Future Plans**
+## ⏳ Future Plans
 - New features i.e online status, able to remove members, group chat access control, able to send files/images, notification when user is added to group chat
 - Migrate from Firebase to another database model for security purposes
 
